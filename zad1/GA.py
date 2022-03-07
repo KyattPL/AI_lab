@@ -31,16 +31,16 @@ class GA:
         reader = DataReader()
         costs = reader.read_cost()
         flows = reader.read_flow()
-        self.machines = CostFlow(costs, flows, NO_MACHINES)
+        self.machines = CostFlow(costs, flows, GA.NO_MACHINES)
         self.population = []
 
-    def generate_population(self) -> None:
+    def generate_random_population(self) -> None:
         """
         Generates the whole population. Each individual randomly places machines.
         """
         self.population: list[Individual] = []
-        for i in range(POP_SIZE):
-            ind = Individual(NO_MACHINES, NO_TILES)
+        for i in range(GA.POP_SIZE):
+            ind = Individual(GA.NO_MACHINES, GA.NO_TILES)
             ind.randomize()
             self.population.append(ind)
 
@@ -56,13 +56,13 @@ class GA:
 
         for ind in self.population:
             individual_rating = 0
-            for src_machine in range(NO_MACHINES - 1):
-                for dst_machine in range(src_machine + 1, NO_MACHINES):
+            for src_machine in range(GA.NO_MACHINES - 1):
+                for dst_machine in range(src_machine + 1, GA.NO_MACHINES):
                     src_spot = ind.genotype[src_machine]
                     dst_spot = ind.genotype[dst_machine]
 
-                    diff_x = abs((src_spot % WIDTH) - (dst_spot % WIDTH))
-                    diff_y = abs(dst_spot // WIDTH - src_spot // WIDTH)
+                    diff_x = abs((src_spot % GA.WIDTH) - (dst_spot % GA.WIDTH))
+                    diff_y = abs(dst_spot // GA.WIDTH - src_spot // GA.WIDTH)
 
                     manhattan = diff_x + diff_y
                     dict_index = dst_machine - src_machine - 1
