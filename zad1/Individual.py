@@ -12,18 +12,24 @@ class Individual:
             machine number, value at that index is the tile on which that machine stands)
     """
 
-    def __init__(self, NO_MACHINES: int, NO_TILES: int) -> None:
+    def __init__(self, NO_MACHINES: int, NO_TILES: int, genotype: list[int] = None) -> None:
         """
         Args:
             NO_MACHINES (int): Number of machines to be placed in a factory
             NO_TILES (int): Number of available tiles/spots for machines to be placed at
+            genotype (list[int]): If given, creates individual with that genotype.
+                Defaults to None
         """
         self.no_machines = NO_MACHINES
         self.no_tiles = NO_TILES
-        self.genotype = []
 
-        for i in range(NO_MACHINES):
-            self.genotype.append(None)
+        if genotype is None:
+            self.genotype = []
+
+            for i in range(NO_MACHINES):
+                self.genotype.append(None)
+        else:
+            self.genotype = genotype
 
     def randomize(self) -> None:
         """
