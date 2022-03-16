@@ -5,7 +5,7 @@ from GA import GA
 expected_solution = 4818
 
 if __name__ == "__main__":
-    ga = GA()
+    ga = GA('hard')
     ga.generate_random_population()
     best_result = ga.evaluate_population()
     while best_result > expected_solution:
@@ -25,3 +25,10 @@ if __name__ == "__main__":
             new_pop.append(child)
         ga.population = new_pop
     print(best_result)
+
+# Sprawozdanie:
+#   - tabele i wykresy dot. porównania:
+#       * krzyżowanie (ON/OFF)
+#       * mutacje (ON/OFF)
+#       * rozmiar populacji (mało, ok, za dużo)
+#       * liczba pokoleń

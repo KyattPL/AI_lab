@@ -17,9 +17,18 @@ class CostFlow:
             NO_MACHINES (int): number of machines
         """
         self.data = []
+        self.connections = []
         for i in range(NO_MACHINES - 1):
             self.data.append([])
+            self.connections.append([])
 
         for i in range(len(costs)):
-            self.data[costs[i]['source']].append(
-                [costs[i]['dest'], costs[i]['cost'], flows[i]['amount']])
+            if costs[i]['source'] > costs[i]['dest']:
+                self.data[costs[i]['dest']].append(
+                    {'dest': costs[i]['source'], 'cost': costs[i]['cost'], 'flow': flows[i]['amount']})
+            else:
+                self.data[costs[i]['source']].append(
+                    {'dest': costs[i]['dest'], 'cost': costs[i]['cost'], 'flow': flows[i]['amount']})
+                self.connections[costs[i]['source']].append(costs[i]['dest'])
+
+        # print(self.connections)

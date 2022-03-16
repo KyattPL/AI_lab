@@ -21,19 +21,19 @@ class GA:
             every pair of machines
     """
 
-    NO_MACHINES = 9
-    NO_TILES = 9
-    POP_SIZE = 10_000
-    WIDTH = 3
-    SELECT_N = 20
-    PROB_MUTATION = 0.1
-    PROB_CROSSOVER = 0.1
+    NO_MACHINES = 24
+    NO_TILES = 30
+    POP_SIZE = 1000
+    WIDTH = 6
+    SELECT_N = 25
+    PROB_MUTATION = 0.9
+    PROB_CROSSOVER = 0.9
 
-    def __init__(self) -> None:
+    def __init__(self, dataset) -> None:
         """
         Reads the data from JSON files, generates a single CostFlow object.
         """
-        reader = DataReader()
+        reader = DataReader(filenames=dataset)
         costs = reader.read_cost()
         flows = reader.read_flow()
         self.machines = CostFlow(costs, flows, GA.NO_MACHINES)
@@ -61,8 +61,8 @@ class GA:
 
         for ind in self.population:
             individual_rating = 0
-            for src_machine in range(GA.NO_MACHINES - 1):
-                for dst_machine in range(src_machine + 1, GA.NO_MACHINES):
+            for src_machine in range(len(self.machines.connections)):
+                for dst_machine in self.machines.connections[src_machine]:
                     src_spot = ind.genotype[src_machine]
                     dst_spot = ind.genotype[dst_machine]
 
@@ -70,11 +70,13 @@ class GA:
                     diff_y = abs(dst_spot // GA.WIDTH - src_spot // GA.WIDTH)
 
                     manhattan = diff_x + diff_y
-                    dict_index = dst_machine - src_machine - 1
 
-                    individual_rating += manhattan * \
-                        self.machines.data[src_machine][dict_index][1] * \
-                        self.machines.data[src_machine][dict_index][2]
+                    connection = {}
+                    for conn in self.machines.data[src_machine]:
+                        if conn['dest'] == dst_machine:
+                            connection = conn
+
+                    individual_rating += manhattan * connection['cost'] * connection['flow']
 
             if individual_rating < best_rating:
                 best_rating = individual_rating
@@ -93,21 +95,22 @@ class GA:
             int: rating for the given individual
         """
         individual_rating = 0
-        for src_machine in range(GA.NO_MACHINES - 1):
-            for dst_machine in range(src_machine + 1, GA.NO_MACHINES):
+
+        for src_machine in range(len(self.machines.connections)):
+            for dst_machine in self.machines.connections[src_machine]:
                 src_spot = ind.genotype[src_machine]
                 dst_spot = ind.genotype[dst_machine]
-
                 diff_x = abs((src_spot % GA.WIDTH) - (dst_spot % GA.WIDTH))
                 diff_y = abs(dst_spot // GA.WIDTH - src_spot // GA.WIDTH)
-
                 manhattan = diff_x + diff_y
-                dict_index = dst_machine - src_machine - 1
 
-                individual_rating += manhattan * \
-                    self.machines.data[src_machine][dict_index][1] * \
-                    self.machines.data[src_machine][dict_index][2]
+                connection = {}
+                for conn in self.machines.data[src_machine]:
+                    if conn['dest'] == dst_machine:
+                        connection = conn
 
+                individual_rating += manhattan * connection['cost'] * connection['flow']
+        
         return individual_rating
 
     def select_individual(self) -> Individual:
