@@ -1,5 +1,6 @@
 from copy import deepcopy
 from random import randint, random
+from types import new_class
 from typing import Tuple
 from DataReader import DataReader
 from CostFlow import CostFlow
@@ -223,9 +224,8 @@ class GA:
         for machine in range(self.NO_MACHINES):
             randomized = random()
             if randomized < self.PROB_MUTATION:
-                mutated_gene = (
-                    new_individual.genotype[machine] + 1) % self.NO_TILES
-                if mutated_gene not in new_individual.genotype:
-                    new_individual.genotype[machine] = mutated_gene
+                temp = new_individual.genotype[machine]
+                new_individual.genotype[machine] = new_individual.genotype[(machine + 1) % self.NO_MACHINES]
+                new_individual.genotype[(machine + 1) % self.NO_MACHINES] = temp
 
         return new_individual
