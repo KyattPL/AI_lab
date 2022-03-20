@@ -7,7 +7,7 @@ from typing import Tuple
 from GA import GA
 
 num_of_runs = 10
-num_of_generations = 100
+num_of_generations = 500
 is_tournament = True
 
 no_progress_for = 100
@@ -119,11 +119,34 @@ if __name__ == "__main__":
         avgs.append(avg / num_of_runs)
         worsts.append(worst)
 
+    best_of_runs = float("inf")
+    worst_of_runs = 0
+    avg_of_runs = 0
+    std_of_runs = []
+
+    for i in range(num_of_runs):
+        if best_all_generations[i][-1] < best_of_runs:
+            best_of_runs = best_all_generations[i][-1]
+        
+        if best_all_generations[i][-1] > worst_of_runs:
+            worst_of_runs = best_all_generations[i][-1]
+
+        avg_of_runs += best_all_generations[i][-1]
+        std_of_runs.append(best_all_generations[i][-1])
+
+    avg_of_runs /= num_of_runs
+    std_of_runs = np.std(std_of_runs)
+    print(f"best: {best_of_runs}")
+    print(f"worst: {worst_of_runs}")
+    print(f"avg: {avg_of_runs}")
+    print(f"std: {std_of_runs}")
+
     fig, ax = plt.subplots()
     plt.plot(np.arange(num_of_generations), bests, label="best")
     plt.plot(np.arange(num_of_generations), avgs, label="avg")
     plt.plot(np.arange(num_of_generations), worsts, label="worsts")
     plt.legend(["best", "avg", "worst"], loc="upper right")
+
     plt.show()
 
     # Sprawozdanie:
