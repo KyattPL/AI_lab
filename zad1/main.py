@@ -4,7 +4,10 @@ import matplotlib.pyplot as plt
 from copy import deepcopy
 from random import random
 from typing import Tuple
+
+from soupsieve import select_one
 from GA import GA
+from Individual import Individual
 
 num_of_runs = 10
 num_of_generations = 500
@@ -13,11 +16,45 @@ is_tournament = True
 no_progress_for = 100
 is_end_cond_dynamic = False
 
+dataset = 'hard'
+no_machines = 24
+no_tiles = 30
+num_of_pop = 50
+width = 6
+select_n = 10
+mut_prob = 0.1
+cross_prob = 0.6
+
+def random_run():
+    ga = GA(dataset, no_machines, no_tiles, num_of_pop, width, select_n, mut_prob, cross_prob)
+    best_score = float("inf")
+    worst_score = 0
+    avg_rnd = 0
+    std_rnd = []
+    for i in range(num_of_runs * num_of_generations * num_of_pop):
+        new_ind = Individual(no_machines, no_tiles)
+        new_ind.randomize()
+        rating = ga.evaluate_individual(new_ind)
+        if rating < best_score:
+            best_score = rating
+        elif rating > worst_score:
+            worst_score = rating
+        
+        avg_rnd += rating
+        std_rnd.append(rating)
+    avg_rnd /= num_of_runs * num_of_generations * num_of_pop
+    std_rnd = np.std(std_rnd)
+    print("\nRANDOM RUN:")
+    print(f"best: {best_score}")
+    print(f"worst: {worst_score}")
+    print(f"avg: {avg_rnd}")
+    print(f"std: {std_rnd}")
+    
 
 def ga_single_run() -> Tuple[list[int], list[int]]:
     # hard - 9119
     # ga = GA('hard', 24, 30, 500, 6, 25, 0.15, 0.75)
-    ga = GA('hard', 24, 30, 50, 6, 10, 0.1, 0.6)
+    ga = GA(dataset, no_machines, no_tiles, num_of_pop, width, select_n, mut_prob, cross_prob)
     #ga = GA('flat', 12, 12, 10, 12, 3, 0.5, 0.9)
     ga.generate_random_population()
     curr_generation = 0
@@ -146,6 +183,8 @@ if __name__ == "__main__":
     print(f"worst: {worst_of_runs}")
     print(f"avg: {avg_of_runs}")
     print(f"std: {std_of_runs}")
+
+    random_run()
 
     fig, ax = plt.subplots()
     plt.plot(np.arange(num_of_generations), bests, label="best")
