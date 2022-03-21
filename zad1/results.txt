@@ -1,0 +1,14 @@
+RES-001:
+num_of_runs = 10
+num_of_generations = 4000
+is_tournament = True
+
+no_progress_for = 100
+is_end_cond_dynamic = False
+
+ga = GA('hard', 24, 30, 200, 6, 10, 0.15, 0.75)
+
+best: 8694
+worst: 9709
+avg: 9168.6
+std: 296.23747230895685

@@ -23,8 +23,8 @@ class GA:
             every pair of machines
     """
 
-    def __init__(self, dataset, NO_MACHINES=9, NO_TILES=9, POP_SIZE=2000, 
-            WIDTH=3, SELECT_N=25, PROB_MUTATION=0.5, PROB_CROSSOVER=0.5) -> None:
+    def __init__(self, dataset, NO_MACHINES=9, NO_TILES=9, POP_SIZE=2000,
+                 WIDTH=3, SELECT_N=25, PROB_MUTATION=0.5, PROB_CROSSOVER=0.5) -> None:
         """
         Reads the data from JSON files, generates a single CostFlow object.
         """
@@ -70,8 +70,10 @@ class GA:
                     src_spot = ind.genotype[src_machine]
                     dst_spot = ind.genotype[dst_machine]
 
-                    diff_x = abs((src_spot % self.WIDTH) - (dst_spot % self.WIDTH))
-                    diff_y = abs(dst_spot // self.WIDTH - src_spot // self.WIDTH)
+                    diff_x = abs((src_spot % self.WIDTH) -
+                                 (dst_spot % self.WIDTH))
+                    diff_y = abs(dst_spot // self.WIDTH -
+                                 src_spot // self.WIDTH)
 
                     manhattan = diff_x + diff_y
 
@@ -80,7 +82,8 @@ class GA:
                         if conn['dest'] == dst_machine:
                             connection = conn
 
-                    individual_rating += manhattan * connection['cost'] * connection['flow']
+                    individual_rating += manhattan * \
+                        connection['cost'] * connection['flow']
 
             if individual_rating < best_rating:
                 best_rating = individual_rating
@@ -98,8 +101,10 @@ class GA:
                     src_spot = ind.genotype[src_machine]
                     dst_spot = ind.genotype[dst_machine]
 
-                    diff_x = abs((src_spot % self.WIDTH) - (dst_spot % self.WIDTH))
-                    diff_y = abs(dst_spot // self.WIDTH - src_spot // self.WIDTH)
+                    diff_x = abs((src_spot % self.WIDTH) -
+                                 (dst_spot % self.WIDTH))
+                    diff_y = abs(dst_spot // self.WIDTH -
+                                 src_spot // self.WIDTH)
 
                     manhattan = diff_x + diff_y
 
@@ -108,11 +113,12 @@ class GA:
                         if conn['dest'] == dst_machine:
                             connection = conn
 
-                    individual_rating += manhattan * connection['cost'] * connection['flow']
+                    individual_rating += manhattan * \
+                        connection['cost'] * connection['flow']
 
             if individual_rating < best_rating:
                 best_rating = individual_rating
-            
+
             ratings.append(individual_rating)
 
         return best_rating, ratings
@@ -143,8 +149,9 @@ class GA:
                     if conn['dest'] == dst_machine:
                         connection = conn
 
-                individual_rating += manhattan * connection['cost'] * connection['flow']
-        
+                individual_rating += manhattan * \
+                    connection['cost'] * connection['flow']
+
         return individual_rating
 
     def select_individual_tournament(self) -> Individual:
@@ -169,7 +176,7 @@ class GA:
 
     def select_individual_roulette(self, ratings: list[int]) -> Individual:
         sum_of_ratings = 0
-        
+
         for rating in ratings:
             sum_of_ratings += rating
 
@@ -177,7 +184,8 @@ class GA:
         sum_of_probs = 0
 
         for rating in ratings:
-            probabilities.append(sum_of_probs + (1 - rating / sum_of_ratings))
+            probabilities.append(
+                sum_of_probs + (1 - rating / sum_of_ratings)**2)
             sum_of_probs += 1 - rating / sum_of_ratings
 
         random_num = randint(0, self.POP_SIZE - 2)
@@ -225,7 +233,9 @@ class GA:
             randomized = random()
             if randomized < self.PROB_MUTATION:
                 temp = new_individual.genotype[machine]
-                new_individual.genotype[machine] = new_individual.genotype[(machine + 1) % self.NO_MACHINES]
-                new_individual.genotype[(machine + 1) % self.NO_MACHINES] = temp
+                new_individual.genotype[machine] = new_individual.genotype[(
+                    machine + 1) % self.NO_MACHINES]
+                new_individual.genotype[(machine + 1) %
+                                        self.NO_MACHINES] = temp
 
         return new_individual

@@ -7,8 +7,8 @@ from typing import Tuple
 from GA import GA
 
 num_of_runs = 10
-num_of_generations = 500
-is_tournament = True
+num_of_generations = 1500
+is_tournament = False
 
 no_progress_for = 100
 is_end_cond_dynamic = False
@@ -16,7 +16,9 @@ is_end_cond_dynamic = False
 
 def ga_single_run() -> Tuple[list[int], list[int]]:
     # hard - 9119
-    ga = GA('hard', 24, 30, 500, 6, 25, 0.15, 0.75)
+    # ga = GA('hard', 24, 30, 500, 6, 25, 0.15, 0.75)
+    ga = GA('hard', 24, 30, 15, 6, 3, 0.033, 0.2)
+    #ga = GA('flat', 12, 12, 10, 12, 3, 0.5, 0.9)
     ga.generate_random_population()
     curr_generation = 0
     generations_wo_progress = 0
@@ -72,6 +74,8 @@ def ga_single_run() -> Tuple[list[int], list[int]]:
         generations_wo_progress += 1
         best_each_generation.append(best_result)
         worst_each_generation.append(worst_result)
+        worst_result = 0
+        best_result = float("inf")
 
     return best_each_generation, worst_each_generation
 
@@ -96,10 +100,12 @@ if __name__ == "__main__":
         processes.append(task)
 
     for p in processes:
-        p.join()
         single_best, single_worst = q.get()
         best_all_generations.append(single_best)
         worst_all_generations.append(single_worst)
+
+    for p in processes:
+        p.join()
 
     bests = []
     avgs = []
@@ -127,7 +133,7 @@ if __name__ == "__main__":
     for i in range(num_of_runs):
         if best_all_generations[i][-1] < best_of_runs:
             best_of_runs = best_all_generations[i][-1]
-        
+
         if best_all_generations[i][-1] > worst_of_runs:
             worst_of_runs = best_all_generations[i][-1]
 
