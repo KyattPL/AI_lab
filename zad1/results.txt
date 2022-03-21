@@ -1,14 +1,598 @@
-RES-001:
-num_of_runs = 10
-num_of_generations = 4000
-is_tournament = True
+- RES/001 - normalne parametry turniej
+- RES/002 - normalne parametry ruletka
+- RES/003 - crossover (na zero)
+- RES/004 - crossover (na połowę)
+- RES/005 - crossover (na maksa)
+- RES/006 - mutacja (na zero)
+- RES/007 - mutacja (na 0.1)
+- RES/008 - mutacja (na 0.5)
+- RES/009 - mutacja (na maksa)
+- RES/010 - mało osobników - 10
+- RES/011 - średnio osobników - 50
+- RES/012 - dużo osobników - 200
+- RES/013 - liczba pokoleń - 500
+- RES/014 - liczba pokoleń - 1500
+- RES/015 - liczba pokoleń - 4000
+- RES/016 - liczba pokoleń - X
 
-no_progress_for = 100
-is_end_cond_dynamic = False
+EASY:
+- EASY/001:
+    best: 4818
+    worst: 5590
+    avg: 5222.5
+    std: 232.3756656795199
 
-ga = GA('hard', 24, 30, 200, 6, 10, 0.15, 0.75)
+    RANDOM RUN:
+    best: 4818  
+    worst: 11730
+    avg: 7842.73896
+    std: 1051.4410923956314
+- EASY/002:
+    best: 4818
+    worst: 5986
+    avg: 5445.9
+    std: 348.0886237727398
 
-best: 8694
-worst: 9709
-avg: 9168.6
-std: 296.23747230895685
+    RANDOM RUN:
+    best: 4818
+    worst: 11730
+    avg: 7848.90504
+    std: 1054.4770008220182
+- EASY/003:
+    best: 5020
+    worst: 5649
+    avg: 5352.5
+    std: 179.9934721038516
+
+    RANDOM RUN:
+    best: 4818  
+    worst: 11730
+    avg: 7847.27732
+    std: 1051.7460602890878
+- EASY/004:
+    best: 4938
+    worst: 5564
+    avg: 5224.1
+    std: 198.10373545190913
+
+    RANDOM RUN:
+    best: 4818
+    worst: 11730
+    avg: 7850.97702
+    std: 1055.6459542725106
+- EASY/005:
+    best: 4862
+    worst: 5534
+    avg: 5272.8
+    std: 205.86393564682476
+
+    RANDOM RUN:
+    best: 4818
+    worst: 11730
+    avg: 7851.42698
+    std: 1048.7930559400552
+- EASY/006:
+    best: 5270
+    worst: 6973
+    avg: 5744.9
+    std: 455.05240357567607
+
+    RANDOM RUN:
+    best: 4818
+    worst: 11730
+    avg: 7849.59612
+    std: 1057.7613785353224
+- EASY/007:
+    best: 5014
+    worst: 5712
+    avg: 5236.8
+    std: 200.42993788354076
+
+    RANDOM RUN:
+    best: 4862
+    worst: 11730
+    avg: 7849.31178
+    std: 1052.2247020732937
+- EASY/008:
+    best: 5112
+    worst: 6998
+    avg: 6051.6
+    std: 645.0448356509801
+
+    RANDOM RUN:
+    best: 4862
+    worst: 11730
+    avg: 7856.62824
+    std: 1047.5539038896768
+- EASY/009:
+    best: 5930
+    worst: 8688
+    avg: 7281.6
+    std: 787.0098093416626
+
+    RANDOM RUN:
+    best: 4862
+    worst: 11730
+    avg: 7854.91212
+    std: 1052.150310096949
+- EASY/010:
+    best: 4927
+    worst: 5670
+    avg: 5333.0
+    std: 250.25427069282952
+
+    RANDOM RUN:
+    best: 4818
+    worst: 11730
+    avg: 7851.25096
+    std: 1053.7621801047321
+- EASY/011:
+    best: 4818
+    worst: 5396
+    avg: 5158.8
+    std: 194.01175222135387
+
+    RANDOM RUN:
+    best: 4818  
+    worst: 11730
+    avg: 7848.095004
+    std: 1051.6794200222043
+- EASY/012:
+    best: 4938
+    worst: 5225
+    avg: 5078.3
+    std: 108.87152979544285
+
+    RANDOM RUN:
+    best: 4818  
+    worst: 11730
+    avg: 7849.201906
+    std: 1052.9149020818193
+- EASY/013:
+    best: 4818
+    worst: 5711
+    avg: 5239.8
+    std: 287.74495651531413
+
+    RANDOM RUN:
+    best: 4818
+    worst: 11724
+    avg: 7838.66818
+    std: 1052.1262057355514
+- EASY/014:
+    best: 4818
+    worst: 5933
+    avg: 5338.8
+    std: 357.0464395565372
+
+    RANDOM RUN:
+    best: 4818  
+    worst: 11730
+    avg: 7852.195933333333
+    std: 1054.725978421313
+- EASY/015:
+    best: 4862
+    worst: 6497
+    avg: 5425.5
+    std: 456.86436718133314
+
+    RANDOM RUN:
+    best: 4818  
+    worst: 11730
+    avg: 7848.3442525
+    std: 1052.7436648789278
+FLAT:
+- FLAT/001:
+    best: 8860
+    worst: 11765
+    avg: 10305.5
+    std: 936.6361353268408
+
+    RANDOM RUN:
+    best: 8940
+    worst: 25425
+    avg: 18087.319
+    std: 2223.56929647785
+- FLAT/002:
+    best: 8605
+    worst: 12860
+    avg: 10107.5
+    std: 1289.4208971472426
+
+    RANDOM RUN:
+    best: 9245  
+    worst: 24820
+    avg: 18093.1778
+    std: 2225.247080121028
+- FLAT/003:
+    best: 8945
+    worst: 12665
+    avg: 10729.0
+    std: 1182.1691926285341
+
+    RANDOM RUN:
+    best: 9130  
+    worst: 24975
+    avg: 18091.1315
+    std: 2220.0787094622906
+- FLAT/004:
+    best: 8930
+    worst: 13475
+    avg: 10522.5
+    std: 1386.827765081158
+
+    RANDOM RUN:
+    best: 9295
+    worst: 25035
+    avg: 18099.5713
+    std: 2230.7870496119326
+- FLAT/005:
+    best: 9505
+    worst: 11065
+    avg: 10187.5
+    std: 641.7252137792312
+
+    RANDOM RUN:
+    best: 9025  
+    worst: 25345
+    avg: 18080.7251
+    std: 2234.1801502407966
+- FLAT/006:
+    best: 10830
+    worst: 16275
+    avg: 14301.5
+    std: 1536.6636749790111
+
+    RANDOM RUN:
+    best: 9145  
+    worst: 24880
+    avg: 18090.8693
+    std: 2222.5776354983664
+- FLAT/007:
+    best: 9700
+    worst: 13570
+    avg: 10892.0
+    std: 1068.8386220566695
+
+    RANDOM RUN:
+    best: 8845  
+    worst: 25085
+    avg: 18104.0411
+    std: 2236.7906187237977
+- FLAT/008:
+    best: 11225
+    worst: 15275
+    avg: 13473.5
+    std: 1580.5964855079237
+
+    RANDOM RUN:
+    best: 9185  
+    worst: 25200
+    avg: 18081.6893
+    std: 2233.5350907844518
+- FLAT/009:
+    best: 11495
+    worst: 18280
+    avg: 15637.5
+    std: 1694.9929940858162
+
+    RANDOM RUN:
+    best: 8820  
+    worst: 25215
+    avg: 18084.6134
+    std: 2230.9312097284487
+- FLAT/010:
+    best: 9405
+    worst: 11205
+    avg: 10341.5
+    std: 478.492685419537
+
+    RANDOM RUN:
+    best: 9290  
+    worst: 24945
+    avg: 18093.6451
+    std: 2217.6188919077126
+- FLAT/011:
+    best: 8445
+    worst: 9485
+    avg: 9033.5
+    std: 360.1392091955554
+
+    RANDOM RUN:
+    best: 8770 
+    worst: 25195
+    avg: 18093.9682
+    std: 2225.379006279326
+- FLAT/012:
+    best: 8115
+    worst: 8930
+    avg: 8669.5
+    std: 305.1348062742105
+
+    RANDOM RUN:
+    best: 8625  
+    worst: 25475
+    avg: 18090.480335
+    std: 2224.10945640121
+- FLAT/013:
+    best: 9590
+    worst: 12595
+    avg: 10902.0
+    std: 868.6662189817214
+
+    RANDOM RUN:
+    best: 8820
+    worst: 25030
+    avg: 18085.2647
+    std: 2220.263786002445
+- FLAT/014:
+    best: 9340
+    worst: 11585
+    avg: 10060.5
+    std: 653.7715579619536
+
+    RANDOM RUN:
+    best: 8130  
+    worst: 25185
+    avg: 18080.997566666665
+    std: 2224.59038582254
+- FLAT/015:
+    best: 9325
+    worst: 11305
+    avg: 10081.5
+    std: 572.3986809907933
+
+    RANDOM RUN:
+    best: 8960
+    worst: 25205
+    avg: 18095.2903875
+    std: 2222.1715609652197
+HARD:
+- HARD/001:
+    best: 15914
+    worst: 18831
+    avg: 17704.9
+    std: 1066.0441313566714
+
+    RANDOM RUN:
+    best: 15055 
+    worst: 39553
+    avg: 26456.36616
+    std: 3175.167076953094
+- HARD/002:
+    best: 15707
+    worst: 20016
+    avg: 17779.9
+    std: 1423.0861850218348
+
+    RANDOM RUN:
+    best: 15588
+    worst: 39183
+    avg: 26460.18492
+    std: 3185.5911937228534
+- HARD/003:
+    best: 15021
+    worst: 19297
+    avg: 17571.8
+    std: 1491.5004391551483
+
+    RANDOM RUN:
+    best: 14357 
+    worst: 38772
+    avg: 26460.37122
+    std: 3170.4016332029155
+- HARD/004:
+    best: 15744
+    worst: 19353
+    avg: 17217.4
+    std: 1223.8858770326588
+
+    RANDOM RUN: 
+    best: 14133 
+    worst: 38660
+    avg: 26459.32694
+    std: 3150.831002438918
+- HARD/005:
+    best: 14308
+    worst: 19118
+    avg: 17549.6
+    std: 1332.4023566475705
+
+    RANDOM RUN:
+    best: 14702
+    worst: 39527
+    avg: 26477.9565
+    std: 3166.6992997958855
+- HARD/006:
+    best: 15761
+    worst: 23092
+    avg: 20664.0
+    std: 2233.3092934029537
+
+    RANDOM RUN:
+    best: 15169 
+    worst: 39825
+    avg: 26449.97138
+    std: 3160.351889382082
+- HARD/007:
+    best: 14866
+    worst: 21281
+    avg: 17640.1
+    std: 2122.4139299392095
+
+    RANDOM RUN:
+    best: 14823 
+    worst: 39186
+    avg: 26437.32928
+    std: 3185.0909455296064
+- HARD/008:
+    best: 15744
+    worst: 19353
+    avg: 17217.4
+    std: 1223.8858770326588
+
+    RANDOM RUN:
+    best: 14133
+    worst: 38660
+    avg: 26459.32694
+    std: 3150.831002438918
+- HARD/009:
+    best: 21725
+    worst: 30622
+    avg: 25980.7
+    std: 2548.270199566757
+
+    RANDOM RUN:
+    best: 14469 
+    worst: 39169
+    avg: 26461.025
+    std: 3156.835054667095
+- HARD/010:
+    best: 15759
+    worst: 20147
+    avg: 17355.4
+    std: 1238.907357311272
+
+    RANDOM RUN:
+    best: 14256 
+    worst: 39321
+    avg: 26461.02874
+    std: 3165.706287676419
+- HARD/011:
+    best: 10439
+    worst: 14046
+    avg: 12163.3
+    std: 1092.3622155677117
+
+    RANDOM RUN:
+    best: 13429 
+    worst: 41082
+    avg: 26450.96768
+    std: 3166.7364260265517
+- HARD/012:
+    best: 11319
+    worst: 13779
+    avg: 12314.6
+    std: 681.5375558250624
+
+    RANDOM RUN:
+    best: 12330 
+    worst: 41110
+    avg: 26449.685569
+    std: 3163.4760317555993
+- HARD/013:
+    best: 16257
+    worst: 20003
+    avg: 17603.6
+    std: 1122.7721229172016
+
+    RANDOM RUN:
+    best: 14905 
+    worst: 39920
+    avg: 26431.5
+    std: 3172.8816154908777
+- HARD/014:
+    best: 16012
+    worst: 20930
+    avg: 17842.6
+    std: 1471.6121228095399
+
+    RANDOM RUN:
+    best: 13800
+    worst: 41481
+    avg: 26437.16278
+    std: 3166.4932065787443
+- HARD/015:
+    best: 15014
+    worst: 20530
+    avg: 18358.6
+    std: 1659.14611773647
+
+    RANDOM RUN: 
+    best: 12985 
+    worst: 40362
+    avg: 26444.093005
+    std: 3164.7538921431264
+- HARD/SOLVING:
+    best: 9464
+    worst: 12045
+    avg: 10760.2
+    std: 728.0887033871628
+
+    RANDOM RUN:
+    best: 13357 
+    worst: 42331
+    avg: 26451.4239144
+    std: 3164.1922300704455
+
+    params:
+    num_of_generations = 500  # 500
+    is_tournament = True
+
+    no_progress_for = 100
+    is_end_cond_dynamic = False
+
+    dataset = 'hard'  # 'easy'
+    no_machines = 24  # 9
+    no_tiles = 30  # 9
+    num_of_pop = 500  # 10
+    width = 6  # 3
+    select_n = 25  # 3
+    mut_prob = 0.07  # 0.1
+    cross_prob = 0.7  # 0.6
+- HARD/SOLVING_2:
+    best: 9314
+    worst: 11842
+    avg: 10803.4
+    std: 673.4947958225066
+
+    RANDOM RUN:
+    best: 14273
+    worst: 40692
+    avg: 26449.47222
+    std: 3163.620526593585
+
+    params:
+    num_of_runs = 10
+    num_of_generations = 50  # 500
+    is_tournament = True
+
+    no_progress_for = 100
+    is_end_cond_dynamic = False
+
+    dataset = 'hard'  # 'easy'
+    no_machines = 24  # 9
+    no_tiles = 30  # 9
+    num_of_pop = 500  # 10
+    width = 6  # 3
+    select_n = 50  # 3
+    mut_prob = 0.15  # 0.1
+    cross_prob = 0.7  # 0.6
+- HARD/SOLVING_3:
+    best: 9862
+    worst: 12542
+    avg: 10905.7
+    std: 943.6946593045867
+
+    RANDOM RUN:
+    best: 12619
+    worst: 41207
+    avg: 26451.4543524
+    std: 3164.600262855625
+
+    params:
+    num_of_runs = 10
+    num_of_generations = 500  # 500
+    is_tournament = True
+
+    no_progress_for = 100
+    is_end_cond_dynamic = False
+
+    dataset = 'hard'  # 'easy'
+    no_machines = 24  # 9
+    no_tiles = 30  # 9
+    num_of_pop = 500  # 10
+    width = 6  # 3
+    select_n = 50  # 3
+    mut_prob = 0.18  # 0.1
+    cross_prob = 0.7  # 0.6

@@ -186,8 +186,8 @@ class GA:
 
         for rating in ratings:
             probabilities.append(
-                sum_of_probs + (sum_of_ratings / rating)**5)
-            sum_of_probs += (sum_of_ratings / rating)**5
+                sum_of_probs + (sum_of_ratings / rating)**7)
+            sum_of_probs += (sum_of_ratings / rating)**7
 
         random_num = randint(0, ceil(sum_of_probs))
         index_of_individual = 0
