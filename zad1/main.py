@@ -7,8 +7,8 @@ from typing import Tuple
 from GA import GA
 
 num_of_runs = 10
-num_of_generations = 1500
-is_tournament = False
+num_of_generations = 500
+is_tournament = True
 
 no_progress_for = 100
 is_end_cond_dynamic = False
@@ -17,7 +17,7 @@ is_end_cond_dynamic = False
 def ga_single_run() -> Tuple[list[int], list[int]]:
     # hard - 9119
     # ga = GA('hard', 24, 30, 500, 6, 25, 0.15, 0.75)
-    ga = GA('hard', 24, 30, 15, 6, 3, 0.033, 0.2)
+    ga = GA('hard', 24, 30, 50, 6, 10, 0.1, 0.6)
     #ga = GA('flat', 12, 12, 10, 12, 3, 0.5, 0.9)
     ga.generate_random_population()
     curr_generation = 0

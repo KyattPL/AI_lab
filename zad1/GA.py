@@ -1,5 +1,6 @@
 from copy import deepcopy
 from random import randint, random
+from math import ceil
 from types import new_class
 from typing import Tuple
 from DataReader import DataReader
@@ -185,10 +186,10 @@ class GA:
 
         for rating in ratings:
             probabilities.append(
-                sum_of_probs + (1 - rating / sum_of_ratings)**2)
-            sum_of_probs += 1 - rating / sum_of_ratings
+                sum_of_probs + (sum_of_ratings / rating)**5)
+            sum_of_probs += (sum_of_ratings / rating)**5
 
-        random_num = randint(0, self.POP_SIZE - 2)
+        random_num = randint(0, ceil(sum_of_probs))
         index_of_individual = 0
 
         for prob in probabilities:
@@ -196,6 +197,9 @@ class GA:
                 break
             else:
                 index_of_individual += 1
+
+        if index_of_individual == self.POP_SIZE:
+            index_of_individual -= 1
 
         return self.population[index_of_individual]
 
