@@ -596,3 +596,22 @@ HARD:
     select_n = 50  # 3
     mut_prob = 0.18  # 0.1
     cross_prob = 0.7  # 0.6
+- HARD/SOLVING_4:
+    pojedynczy run bo dynamiczny koniec
+
+    params:
+    num_of_runs = 1
+    num_of_generations = 500  # 500
+    is_tournament = True
+
+    no_progress_for = 250
+    is_end_cond_dynamic = True
+
+    dataset = 'hard'  # 'easy'
+    no_machines = 24  # 9
+    no_tiles = 30  # 9
+    num_of_pop = 500  # 10
+    width = 6  # 3
+    select_n = 50  # 3
+    mut_prob = 0.15  # 0.1
+    cross_prob = 0.75  # 0.6

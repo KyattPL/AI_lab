@@ -14,14 +14,14 @@ is_tournament = True
 no_progress_for = 100
 is_end_cond_dynamic = False
 
-dataset = 'hard'  # 'easy'
-no_machines = 24  # 9
-no_tiles = 30  # 9
-num_of_pop = 500  # 10
-width = 6  # 3
-select_n = 50  # 3
-mut_prob = 0.18  # 0.1
-cross_prob = 0.7  # 0.6
+dataset = 'easy'  # 'easy'
+no_machines = 9  # 9
+no_tiles = 9  # 9
+num_of_pop = 10  # 10
+width = 3  # 3
+select_n = 3  # 3
+mut_prob = 0.1  # 0.1
+cross_prob = 0.6  # 0.6
 
 
 def random_run():
