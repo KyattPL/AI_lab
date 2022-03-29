@@ -1,0 +1,14 @@
+Wydaje mi się, że:
+- Zmienne to będą po prostu pola gry
+- Dziedzina to będzie:
+	- dla binary: 0 lub 1
+	- dla Futoshiki: 1-n, gdzie n to rozmiar planszy n x n
+- Ograniczenia:
+	- dla binary:
+		- każdy wiersz i kolumna tyle samo zer co jedynek
+		- każdy wiersz i kolumna są unikalne
+		- w żadnym wierszu i w żadnej kolumnie nie ma 3 zer/jedynek pod rząd
+	- dla Futoshiki:
+		- w każdym wierszu i kolumnie mają być wszystkie liczby 1-n
+			(bez powtórek, występują dokładnie raz)
+		- każdy wiersz i kolumna muszą spełniać podane nierówności
