@@ -1,0 +1,3 @@
+https://en.wikipedia.org/wiki/Constraint_satisfaction_problem
+https://en.wikipedia.org/wiki/Backtracking
+https://www.geeksforgeeks.org/sudoku-backtracking-7/
