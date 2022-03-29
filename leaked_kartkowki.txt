@@ -1,0 +1,8 @@
+nr 1 (06.04): 
+z drugiej listy (z zagadnienia drugiej listy),
+opisać własnymi słowami CSP (połowa będzie miała problem binary a druga Futoshiki)
+albo będzie zadany przykład albo trzeba będzie pokazać na przykładzie jak to wygląda
+wystarczy rozwiązać planszę i opisać jakie są kroki do rozwiązania
+
+nr 2:
+z listy trzeciej, szczegóły później
