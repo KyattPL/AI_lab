@@ -1,6 +1,7 @@
 Wydaje mi się, że:
+- Dziedzina to plansza gry
 - Zmienne to będą po prostu pola gry
-- Dziedzina to będzie:
+- Wartości zmiennych to będzie:
 	- dla binary: 0 lub 1
 	- dla Futoshiki: 1-n, gdzie n to rozmiar planszy n x n
 - Ograniczenia:
