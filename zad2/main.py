@@ -1,4 +1,5 @@
 from Binary import Binary
+from Futoshiki import Futoshiki
 
 solutions = 0
 
@@ -24,6 +25,8 @@ def backtrack(puz: Binary) -> int:
 
 
 if __name__ == "__main__":
-    puzzle = Binary("binary_10x10", board_width=10)
-    backtrack(puzzle)
-    print(solutions)
+    #puzzle = Binary("binary_10x10", board_width=10)
+    #backtrack(puzzle)
+    #print(solutions)
+    print([None] * 4)
+    puz_snd = Futoshiki("futoshiki_4x4", board_width=4)
