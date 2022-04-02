@@ -1,3 +1,4 @@
+from copy import deepcopy
 from typing import Union
 
 
@@ -6,6 +7,18 @@ class Binary:
     def __init__(self, file_name="binary_6x6", board_width=6) -> None:
         self.board = self.read_data(file_name)
         self.board_width = board_width
+
+    def print_board(self):
+        for row in range(self.board_width):
+            for col in range(self.board_width):
+                print(self.board[row * self.board_width + col], end='')
+            print()
+
+    def clone(self):
+        return deepcopy(self)
+
+    def update_spot(self, ind, val) -> None:
+        self.board[ind] = val
 
     def read_data(self, file) -> list[Union[int, None]]:
         with open(file, "r") as f:
@@ -28,6 +41,8 @@ class Binary:
         second = self.check_unique_constraint()
         third = self.check_threes_constraint()
 
+        #print(first, second, third)
+
         return first and second and third
 
     def check_threes_constraint(self) -> bool:
@@ -42,10 +57,14 @@ class Binary:
                 if curr_num is not None:
                     if last_num == curr_num:
                         how_many_in_row += 1
+                        if how_many_in_row == 3:
+                            is_good = False
+                            break
+                    else:
+                        how_many_in_row = 1
                     last_num = curr_num
-            if how_many_in_row >= 3:
-                is_good = False
-                break
+                else:
+                    how_many_in_row = 1
 
         for col in range(self.board_width):
             last_num = None
@@ -55,10 +74,14 @@ class Binary:
                 if curr_num is not None:
                     if last_num == curr_num:
                         how_many_in_row += 1
+                        if how_many_in_row == 3:
+                            is_good = False
+                            break
+                    else:
+                        how_many_in_row = 1
                     last_num = curr_num
-            if how_many_in_row >= 3:
-                is_good = False
-                break
+                else:
+                    how_many_in_row = 1
 
         return is_good
 
@@ -97,7 +120,7 @@ class Binary:
                 continue
             else:
                 for col in range(self.board_width):
-                    if self.board[row * wid + col] == '1':
+                    if self.board[row * wid + col] == 1:
                         no_ones += 1
                     else:
                         no_zeros += 1
@@ -105,19 +128,19 @@ class Binary:
                 if no_ones != no_zeros:
                     return False
 
-        for col in range(self.board_width):
+        for col in range(wid):
             no_ones = 0
             no_zeros = 0
             curr_col = []
 
-            for row in range(self.board_width):
+            for row in range(wid):
                 curr_col.append(self.board[row * wid + col])
 
             if None in curr_col:
                 continue
             else:
                 for cell in curr_col:
-                    if cell == '1':
+                    if cell == 1:
                         no_ones += 1
                     else:
                         no_zeros += 1
@@ -126,3 +149,12 @@ class Binary:
                     return False
 
         return True
+
+    def find_next_spot(self) -> Union[int, None]:
+        index = None
+        for (ind, spot) in enumerate(self.board):
+            if spot == None:
+                index = ind
+                break
+        
+        return index
