@@ -23,7 +23,7 @@ class Binary:
     def read_data(self, file) -> list[Union[int, None]]:
         with open(file, "r") as f:
             data = f.readlines()
-        
+
         result = []
         for line in data:
             for char in line:
@@ -33,7 +33,7 @@ class Binary:
                     pass
                 else:
                     result.append(int(char))
-        
+
         return result
 
     def check_constraints(self) -> bool:
@@ -65,6 +65,7 @@ class Binary:
                     last_num = curr_num
                 else:
                     how_many_in_row = 1
+                    last_num = None
 
         for col in range(self.board_width):
             last_num = None
@@ -82,6 +83,7 @@ class Binary:
                     last_num = curr_num
                 else:
                     how_many_in_row = 1
+                    last_num = None
 
         return is_good
 
@@ -90,12 +92,13 @@ class Binary:
 
         analyzed_rows = []
         for row in range(wid):
-            if self.board[(row) * wid : (row+1) * wid] in analyzed_rows:
+            if self.board[(row) * wid: (row+1) * wid] in analyzed_rows:
                 return False
             else:
-                if None not in self.board[(row) * wid : (row + 1) * wid]:
-                    analyzed_rows.append(self.board[(row) * wid : (row + 1) * wid])
-        
+                if None not in self.board[(row) * wid: (row + 1) * wid]:
+                    analyzed_rows.append(
+                        self.board[(row) * wid: (row + 1) * wid])
+
         analyzed_cols = []
         for col in range(wid):
             curr_col = []
@@ -116,7 +119,7 @@ class Binary:
             no_ones = 0
             no_zeros = 0
 
-            if None in self.board[row * wid : (row + 1) * wid]:
+            if None in self.board[row * wid: (row + 1) * wid]:
                 continue
             else:
                 for col in range(self.board_width):
@@ -124,7 +127,7 @@ class Binary:
                         no_ones += 1
                     else:
                         no_zeros += 1
-                
+
                 if no_ones != no_zeros:
                     return False
 
@@ -144,7 +147,7 @@ class Binary:
                         no_ones += 1
                     else:
                         no_zeros += 1
-                
+
                 if no_ones != no_zeros:
                     return False
 
@@ -156,5 +159,5 @@ class Binary:
             if spot == None:
                 index = ind
                 break
-        
+
         return index
