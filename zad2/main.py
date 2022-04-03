@@ -26,6 +26,7 @@ def backtrack(puz: Binary) -> int:
 
 if __name__ == "__main__":
     #puzzle = Binary("binary_10x10", board_width=10)
-    #backtrack(puzzle)
-    #print(solutions)
+    # backtrack(puzzle)
+    # print(solutions)
     puz_snd = Futoshiki("futoshiki_4x4", board_width=4)
+    puz_snd.print_board()

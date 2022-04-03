@@ -11,7 +11,33 @@ class Futoshiki:
         self.boundaries = boundaries
 
     def print_board(self):
-        pass
+        print(self.boundaries)
+        for line in range(self.board_width):
+            between_bounds = ""
+            for cell in range(self.board_width):
+                val = self.board[line * self.board_width + cell]
+                to_right = self.boundaries[line * self.board_width + cell][1]
+                to_bottom = self.boundaries[line * self.board_width + cell][2]
+
+                if val is None:
+                    print('x', end='')
+                else:
+                    print(val, end='')
+
+                if to_right is None:
+                    print(' ', end='')
+                else:
+                    print(to_right, end='')
+
+                if to_bottom is None:
+                    between_bounds += "  "
+                elif to_bottom == ">":
+                    between_bounds += "V "
+                else:
+                    between_bounds += "^ "
+            if line != self.board_width - 1:
+                print()
+                print(between_bounds)
 
     def read_data(self, file) -> Tuple[list[Union[int, None]], list[list[Union[None, str]]]]:
         with open(file, "r") as f:
@@ -41,8 +67,9 @@ class Futoshiki:
                         cell_boundaries[board_line * wid +
                                         (ind_in + 1) // 2][3] = '<'
                     else:
-                        cell_boundaries[board_line * wid + ind_in - 1][2] = '>'
-                        cell_boundaries[board_line * wid + ind_in + 1][0] = '<'
+                        cell_boundaries[board_line * wid + ind_in][2] = '>'
+                        cell_boundaries[(board_line + 1) *
+                                        wid + ind_in][0] = '<'
                 if char == '<':
                     if ind_out % 2 == 0:
                         cell_boundaries[board_line * wid +
@@ -50,7 +77,61 @@ class Futoshiki:
                         cell_boundaries[board_line * wid +
                                         (ind_in + 1) // 2][3] = '>'
                     else:
-                        cell_boundaries[board_line * wid + ind_in - 1][2] = '<'
-                        cell_boundaries[board_line * wid + ind_in + 1][0] = '>'
+                        cell_boundaries[board_line * wid + ind_in][2] = '<'
+                        cell_boundaries[(board_line + 1) *
+                                        wid + ind_in][0] = '>'
 
         return (board, cell_boundaries)
+
+    def check_constraints(self) -> bool:
+        return True
+
+    def check_no_repeats(self) -> bool:
+        wid = self.board_width
+
+        for row in range(self.board_width):
+            row_nums = []
+            for cell in range(self.board_width):
+                val = self.board[row * wid + cell]
+                if val is not None:
+                    if val in row_nums:
+                        return False
+                    else:
+                        row_nums.append(val)
+
+        for col in range(self.board_width):
+            col_nums = []
+            for cell in range(self.board_width):
+                val = self.board[cell * wid + col]
+                if val is not None:
+                    if val in col_nums:
+                        return False
+                    else:
+                        col_nums.append(val)
+
+        return True
+
+    def check_boundaries(self) -> bool:
+        wid = self.board_width
+
+        for row in range(self.board_width):
+            for cell in range(self.board_width):
+                boundaries_list = self.boundaries[row * wid + cell]
+                val1 = self.board[row * wid + cell]
+                if boundaries_list[0] is not None:
+                    val2 = self.board[(row - 1) * wid + cell]
+                    Futoshiki.check_inequality(val1, val2, boundaries_list[0])
+                if boundaries_list[1] is not None:
+                    val2 = self.board[row * wid + cell + 1]
+                    Futoshiki.check_inequality(val1, val2, boundaries_list[1])
+                if boundaries_list[2] is not None:
+                    val2 = self.board[(row + 1) * wid + cell]
+                    Futoshiki.check_inequality(val1, val2, boundaries_list[2])
+                if boundaries_list[3] is not None:
+                    val2 = self.board[row * wid + cell - 1]
+                    Futoshiki.check_inequality(val1, val2, boundaries_list[3])
+        return True
+
+    @staticmethod
+    def check_inequality(num1, num2, sign) -> bool:
+        return True
