@@ -7,6 +7,7 @@ class Binary:
     def __init__(self, file_name="binary_6x6", board_width=6) -> None:
         self.board = self.read_data(file_name)
         self.board_width = board_width
+        self.set_of_vals = [0, 1]
 
     def print_board(self):
         for row in range(self.board_width):

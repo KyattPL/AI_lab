@@ -1,3 +1,4 @@
+from copy import deepcopy
 from typing import Tuple, Union
 
 
@@ -9,9 +10,27 @@ class Futoshiki:
         (brd, boundaries) = self.read_data(file_name)
         self.board = brd
         self.boundaries = boundaries
+        self.set_of_vals = list(range(1, board_width + 1))
+
+    @staticmethod
+    def check_inequality(num1, num2, sign) -> bool:
+        if num1 is None or num2 is None:
+            return True
+
+        if num1 > num2 and sign == '>':
+            return True
+        elif num1 < num2 and sign == '<':
+            return True
+        else:
+            return False
+
+    def clone(self):
+        return deepcopy(self)
+
+    def update_spot(self, ind, val) -> None:
+        self.board[ind] = val
 
     def print_board(self):
-        print(self.boundaries)
         for line in range(self.board_width):
             between_bounds = ""
             for cell in range(self.board_width):
@@ -84,7 +103,10 @@ class Futoshiki:
         return (board, cell_boundaries)
 
     def check_constraints(self) -> bool:
-        return True
+        first = self.check_no_repeats()
+        second = self.check_boundaries()
+
+        return first and second
 
     def check_no_repeats(self) -> bool:
         wid = self.board_width
@@ -120,18 +142,28 @@ class Futoshiki:
                 val1 = self.board[row * wid + cell]
                 if boundaries_list[0] is not None:
                     val2 = self.board[(row - 1) * wid + cell]
-                    Futoshiki.check_inequality(val1, val2, boundaries_list[0])
+                    if not Futoshiki.check_inequality(val1, val2, boundaries_list[0]):
+                        return False
                 if boundaries_list[1] is not None:
                     val2 = self.board[row * wid + cell + 1]
-                    Futoshiki.check_inequality(val1, val2, boundaries_list[1])
+                    if not Futoshiki.check_inequality(val1, val2, boundaries_list[1]):
+                        return False
                 if boundaries_list[2] is not None:
                     val2 = self.board[(row + 1) * wid + cell]
-                    Futoshiki.check_inequality(val1, val2, boundaries_list[2])
+                    if not Futoshiki.check_inequality(val1, val2, boundaries_list[2]):
+                        return False
                 if boundaries_list[3] is not None:
                     val2 = self.board[row * wid + cell - 1]
-                    Futoshiki.check_inequality(val1, val2, boundaries_list[3])
+                    if not Futoshiki.check_inequality(val1, val2, boundaries_list[3]):
+                        return False
+
         return True
 
-    @staticmethod
-    def check_inequality(num1, num2, sign) -> bool:
-        return True
+    def find_next_spot(self) -> Union[int, None]:
+        index = None
+        for (ind, spot) in enumerate(self.board):
+            if spot == None:
+                index = ind
+                break
+
+        return index
