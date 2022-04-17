@@ -1,4 +1,5 @@
 from copy import deepcopy
+from random import randint
 from typing import Union
 
 
@@ -41,8 +42,6 @@ class Binary:
         first = self.check_same_amount_constraint()
         second = self.check_unique_constraint()
         third = self.check_threes_constraint()
-
-        #print(first, second, third)
 
         return first and second and third
 
@@ -162,3 +161,15 @@ class Binary:
                 break
 
         return index
+
+    def find_next_spot_random(self) -> Union[int, None]:
+        free_spots = []
+        for (ind, spot) in enumerate(self.board):
+            if spot is None:
+                free_spots.append(ind)
+        
+        if len(free_spots) == 0:
+            return None
+        else:
+            rand_num = randint(0, len(free_spots) - 1)
+            return free_spots[rand_num]
