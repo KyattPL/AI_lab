@@ -8,5 +8,15 @@ opisać CSP, dziedzina, zmienne(wartości), heurystyka
 opisać backtracking
 futoshiki / binary -> co to + do rozwiązania
 
+CSP (Constraint Satisfaction Problem - problem spełniania ograniczeń) - problemy matematyczne
+charakteryzowane przez 3 składowe:
+- zmienne - obiekty, których stan jesteśmy w stanie zmieniać
+- zbiory wartości - osobny dla każdej zmiennej zbiór określający możliwe do przyjęcia przez tę 		zmienną wartości
+- ograniczenia - zbiór relacji między zmiennymi i ich wartościami, określający warunki, które muszą
+	być przestrzegane przez zmienne
+	
+Heurystyka - przyjęte postępowanie w celu znalezienia optymalnego rozwiązania, jednak bez gwarancji 	jego otrzymania
+
+
 nr 2:
 z listy trzeciej, szczegóły później

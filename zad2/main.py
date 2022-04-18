@@ -5,8 +5,6 @@ from Binary import Binary
 from Futoshiki import Futoshiki
 
 solutions = 0
-set_of_vals = [1, 2, 3, 4]
-
 
 def backtrack(puz: Union[Binary, Futoshiki], isPlaceRandom=False, isValRandom=False) -> None:
     global solutions
@@ -89,8 +87,8 @@ def forward_checking(puz: Union[Binary, Futoshiki], isPlaceRandom=False, isValRa
     return
         
 if __name__ == "__main__":
-    #puzzle = Binary("binary_10x10", board_width=10)
-    puzzle = Futoshiki("futoshiki_6x6", board_width=6)
+    puzzle = Binary("binary_6x6", board_width=6)
+    #puzzle = Futoshiki("futoshiki_6x6", board_width=6)
     #backtrack(puzzle)
     puzzle.init_domains()
     forward_checking(puzzle)
