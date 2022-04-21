@@ -1,13 +1,17 @@
 from copy import deepcopy
 from random import randint
+from time import perf_counter
 from typing import Union
 from Binary import Binary
 from Futoshiki import Futoshiki
 
 solutions = 0
+nodes = 0
 
 def backtrack(puz: Union[Binary, Futoshiki], isPlaceRandom=False, isValRandom=False) -> None:
     global solutions
+    global nodes
+    nodes += 1
 
     if isPlaceRandom:
         next_place = puz.find_next_spot_random()
@@ -44,6 +48,8 @@ def backtrack(puz: Union[Binary, Futoshiki], isPlaceRandom=False, isValRandom=Fa
 
 def forward_checking(puz: Union[Binary, Futoshiki], isPlaceRandom=False, isValRandom=False) -> None:
     global solutions
+    global nodes
+    nodes += 1
 
     if isPlaceRandom:
         next_place = puz.find_next_spot_random()
@@ -87,9 +93,15 @@ def forward_checking(puz: Union[Binary, Futoshiki], isPlaceRandom=False, isValRa
     return
         
 if __name__ == "__main__":
-    puzzle = Binary("binary_6x6", board_width=6)
-    #puzzle = Futoshiki("futoshiki_6x6", board_width=6)
+    #puzzle = Binary("binary_10x10", board_width=6)
+    puzzle = Futoshiki("futoshiki_5x5", board_width=5)
+    start_time = perf_counter()
     #backtrack(puzzle)
     puzzle.init_domains()
     forward_checking(puzzle)
-    print(solutions)
+    end_time = perf_counter()
+    
+    print()
+    print(f'Solutions: {solutions}')
+    print(f'Nodes visited: {nodes}')
+    print(f'Time: {end_time - start_time}')
