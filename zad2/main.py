@@ -7,10 +7,14 @@ from Futoshiki import Futoshiki
 
 solutions = 0
 nodes = 0
+start_time = perf_counter()
+end_time = None
+
 
 def backtrack(puz: Union[Binary, Futoshiki], isPlaceRandom=False, isValRandom=False) -> None:
     global solutions
     global nodes
+    global end_time
     nodes += 1
 
     if isPlaceRandom:
@@ -20,8 +24,10 @@ def backtrack(puz: Union[Binary, Futoshiki], isPlaceRandom=False, isValRandom=Fa
 
     if next_place == None:
         if puz.check_constraints():
+            end_time = perf_counter()
             solutions += 1
             puz.print_board()
+            print_single()
             print()
         return
 
@@ -49,6 +55,7 @@ def backtrack(puz: Union[Binary, Futoshiki], isPlaceRandom=False, isValRandom=Fa
 def forward_checking(puz: Union[Binary, Futoshiki], isPlaceRandom=False, isValRandom=False) -> None:
     global solutions
     global nodes
+    global end_time
     nodes += 1
 
     if isPlaceRandom:
@@ -58,8 +65,10 @@ def forward_checking(puz: Union[Binary, Futoshiki], isPlaceRandom=False, isValRa
 
     if next_place == None:
         if puz.check_constraints():
+            end_time = perf_counter()
             solutions += 1
             puz.print_board()
+            print_single()
             print()
         return
 
@@ -78,8 +87,6 @@ def forward_checking(puz: Union[Binary, Futoshiki], isPlaceRandom=False, isValRa
             isGood = new_puz.check_domains()
             if isGood:
                 forward_checking(new_puz, isPlaceRandom, isValRandom)
-            else:
-                return
             vals_left.remove(rand_val)
     else:
         possible_vals = deepcopy(puz.domains[next_place])
@@ -89,19 +96,26 @@ def forward_checking(puz: Union[Binary, Futoshiki], isPlaceRandom=False, isValRa
             isGood = new_puz.check_domains()
             if isGood:
                 forward_checking(new_puz, isPlaceRandom, isValRandom)
-    
+
     return
-        
-if __name__ == "__main__":
-    #puzzle = Binary("binary_10x10", board_width=6)
-    puzzle = Futoshiki("futoshiki_5x5", board_width=5)
-    start_time = perf_counter()
-    #backtrack(puzzle)
-    puzzle.init_domains()
-    forward_checking(puzzle)
-    end_time = perf_counter()
-    
+
+
+def print_single():
     print()
     print(f'Solutions: {solutions}')
     print(f'Nodes visited: {nodes}')
     print(f'Time: {end_time - start_time}')
+    print()
+    exit()
+
+
+if __name__ == "__main__":
+    single_width = 6
+    # puzzle = Binary(
+    #    f'binary_{single_width}x{single_width}', board_width=single_width)
+    puzzle = Futoshiki(
+        f'futoshiki_{single_width}x{single_width}', board_width=single_width)
+    start_time = perf_counter()
+    backtrack(puzzle, isPlaceRandom=True, isValRandom=False)
+    # puzzle.init_domains()
+    #forward_checking(puzzle, isPlaceRandom=True, isValRandom=True)
