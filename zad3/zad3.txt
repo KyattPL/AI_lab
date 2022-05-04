@@ -1,0 +1,5 @@
+- 4 heurystyki oceny stanu gry
+- GUI opcjonalne (za 1 punkt)
+- kartkówka - 18.05:
+	- min-max - co to jest + umieć rozwiązać przykład
+	- alfa-beta - co to jest + umieć rozwiązać przykład

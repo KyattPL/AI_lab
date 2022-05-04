@@ -2,6 +2,8 @@ from copy import deepcopy
 from random import randint
 from time import perf_counter
 from typing import Union
+
+from flask import Flask
 from Binary import Binary
 from Futoshiki import Futoshiki
 
@@ -68,7 +70,7 @@ def forward_checking(puz: Union[Binary, Futoshiki], isPlaceRandom=False, isValRa
             end_time = perf_counter()
             solutions += 1
             puz.print_board()
-            print_single()
+            #print_single()
             print()
         return
 
@@ -116,6 +118,6 @@ if __name__ == "__main__":
     puzzle = Futoshiki(
         f'futoshiki_{single_width}x{single_width}', board_width=single_width)
     start_time = perf_counter()
-    backtrack(puzzle, isPlaceRandom=True, isValRandom=False)
-    # puzzle.init_domains()
-    #forward_checking(puzzle, isPlaceRandom=True, isValRandom=True)
+    #backtrack(puzzle, isPlaceRandom=False, isValRandom=False)
+    puzzle.init_domains()
+    forward_checking(puzzle, isPlaceRandom=False, isValRandom=False)
