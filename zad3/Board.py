@@ -1,10 +1,10 @@
 from copy import deepcopy
-from os import system
+import os
 import typing as tp
 
-from numpy import empty
 from Color import Color
 from Piece import Piece
+
 
 class Board:
 
@@ -19,7 +19,7 @@ class Board:
             for _ in range(Board.BOARD_SIZE):
                 temp.append(None)
             self.board.append(temp)
-        
+
         for black_row in range(3):
             for col in range(Board.BOARD_SIZE):
                 if (black_row + col) % 2 == 1:
@@ -34,22 +34,29 @@ class Board:
     def clamp_to_board(row, col) -> tp.Union[None, tp.Tuple[int, int]]:
         if row < 0 or row >= Board.BOARD_SIZE:
             return None
-        
+
         if col < 0 or col >= Board.BOARD_SIZE:
             return None
-        
+
         return (row, col)
 
     def print_board(self) -> None:
-        system("clear")
+        if os.name == 'nt':
+            os.system('cls')
+        else:
+            os.system('clear')
         for row in self.board:
             for cell in row:
                 if cell == None:
                     print('#', end=' ')
-                elif cell.color == Color.White:
+                elif cell.color == Color.White and not cell.is_king:
                     print('W', end=' ')
-                else:
+                elif cell.color == Color.Black and not cell.is_king:
                     print('B', end=' ')
+                elif cell.color == Color.White and cell.is_king:
+                    print('w', end=' ')
+                else:
+                    print('b', end=' ')
             print()
 
     def move_piece(self, piece_row, piece_col, dest_row, dest_col) -> None:
@@ -64,10 +71,10 @@ class Board:
         piece_color = self.board[row][col].color
         is_king = self.board[row][col].is_king
 
-        q1 = Board.clamp_to_board(row - 1, col - 1) #WHITE
-        q2 = Board.clamp_to_board(row - 1, col + 1) #WHITE
-        q3 = Board.clamp_to_board(row + 1, col - 1) #BLACK
-        q4 = Board.clamp_to_board(row + 1, col + 1) #BLACK
+        q1 = Board.clamp_to_board(row - 1, col - 1)  # WHITE
+        q2 = Board.clamp_to_board(row - 1, col + 1)  # WHITE
+        q3 = Board.clamp_to_board(row + 1, col - 1)  # BLACK
+        q4 = Board.clamp_to_board(row + 1, col + 1)  # BLACK
         qs = [q1, q2, q3, q4]
 
         behind_q1 = Board.clamp_to_board(row - 2, col - 2)
@@ -82,8 +89,8 @@ class Board:
                     if self.board[q[0]][q[1]] is None:
                         return True
                     if behind_qs[index] is not None and self.board[q[0]][q[1]].color != piece_color \
-                        and self.board[behind_qs[index][0]][behind_qs[index][1]] is None:
-                        return True 
+                            and self.board[behind_qs[index][0]][behind_qs[index][1]] is None:
+                        return True
         else:
             if piece_color == Color.White:
                 for (index, q) in enumerate(qs):
@@ -91,8 +98,8 @@ class Board:
                         if index < 2 and self.board[q[0]][q[1]] is None:
                             return True
                         if behind_qs[index] is not None and self.board[q[0]][q[1]] is not None \
-                            and self.board[q[0]][q[1]].color != piece_color \
-                            and self.board[behind_qs[index][0]][behind_qs[index][1]] is None:
+                                and self.board[q[0]][q[1]].color != piece_color \
+                                and self.board[behind_qs[index][0]][behind_qs[index][1]] is None:
                             return True
             else:
                 for (index, q) in enumerate(qs):
@@ -100,15 +107,15 @@ class Board:
                         if index > 1 and self.board[q[0]][q[1]] is None:
                             return True
                         if behind_qs[index] is not None and self.board[q[0]][q[1]] is not None \
-                            and self.board[q[0]][q[1]].color != piece_color \
-                            and self.board[behind_qs[index][0]][behind_qs[index][1]] is None:
-                            return True                
+                                and self.board[q[0]][q[1]].color != piece_color \
+                                and self.board[behind_qs[index][0]][behind_qs[index][1]] is None:
+                            return True
 
         return False
 
-    def recursive_king_beatings(self, board_copy: list[list[tp.Union[None, Piece]]], row: int, col: int, \
-        starting_color: Color, depth: int, beatings_map: tp.Tuple[tp.Tuple[int, int], list[tp.Tuple[int, int]]]):
-        
+    def recursive_king_beatings(self, board_copy: list[list[tp.Union[None, Piece]]], row: int, col: int,
+                                starting_color: Color, depth: int, beatings_map: tp.Tuple[tp.Tuple[int, int], list[tp.Tuple[int, int]]]):
+
         best_depth = 0
         best_moves = []
         to_beat: dict[tp.Tuple[int, int], list[tp.Tuple[int, int]]] = {}
@@ -135,14 +142,14 @@ class Board:
                             empty_tiles.append((next_row, next_col))
                         else:
                             break
-                    
+
                     if len(empty_tiles) == 0:
                         break
                     else:
                         to_beat[beaten_piece_coords] = empty_tiles
                 else:
                     next_row += q[0]
-                    next_col += q[1]        
+                    next_col += q[1]
 
         if len(to_beat.keys()) == 0:
             return (depth, beatings_map)
@@ -153,73 +160,22 @@ class Board:
                     new_board[key[0]][key[1]] = None
                     new_beatings = (landing_spot, beatings_map[1])
                     new_beatings[1].append(key)
-                    rec_outcome = self.recursive_king_beatings(new_board, landing_spot[0], landing_spot[1], \
-                        starting_color, depth + 1, new_beatings, False)
+                    rec_outcome = self.recursive_king_beatings(new_board, landing_spot[0], landing_spot[1],
+                                                               starting_color, depth + 1, new_beatings, False)
 
                     if rec_outcome[0] > best_depth:
                         best_depth = rec_outcome[0]
                         best_moves = [rec_outcome[1]]
                     elif rec_outcome[0] == best_depth:
                         best_moves.append(rec_outcome[1])
-        
+
         return best_depth, best_moves
-
-    # def recursive_best_beating(self, board_copy: list[list[tp.Union[None, Piece]]], row: int, col: int,\
-    #     starting_color: Color, current_beaten: int, best_beaten: int, best_spots: list[tp.Tuple[int, int]]):
-    #     qs = [(-1, -1), (-1, 1), (1, 1), (1, -1)]
-
-    #     curr_best_spots = []
-
-
-    #     for q in qs:
-    #         next_row = row + q[0]
-    #         next_col = col + q[1]
-
-    #         while next_row > 0 and next_row < self.BOARD_SIZE and next_col > 0 and next_col < self.BOARD_SIZE:
-    #             next_tile = board_copy[next_row][next_col]
-
-    #             if next_tile is not None and next_tile.color == starting_color:
-    #                 break
-    #             elif next_tile is not None:
-    #                 empty_tiles = []
-    #                 beaten_piece_coords = (next_row, next_col)
-                    
-    #                 next_row += q[0]
-    #                 next_col += q[1]
-
-    #                 while next_row > 0 and next_row < self.BOARD_SIZE and next_col > 0 and next_col < self.BOARD_SIZE:
-    #                     next_tile = board_copy[next_row][next_col]
-    #                     if next_tile is None:
-    #                         empty_tiles.append((next_row, next_col))
-    #                     else:
-    #                         break
-                    
-    #                 if len(empty_tiles) == 0:
-    #                     break
-    #                 else:
-    #                     for tile in empty_tiles:
-    #                         new_copy = deepcopy(board_copy)
-    #                         new_copy[beaten_piece_coords[0]][beaten_piece_coords[1]] = None
-    #                         repeated_outcome = self.recursive_best_beating(new_copy, tile[0], tile[1], starting_color, current_beaten + 1)
-    #                         curr_best_spots.append(tile)
-    #             else:
-    #                 next_row += q[0]
-    #                 next_col += q[1]
-
-    #     if current_beaten > best_beaten:
-    #         best_beaten = current_beaten
-    #         best_spots = curr_best_spots
-    #     elif current_beaten == best_beaten:
-    #         best_spots
-
-    #     return current_beaten, best_spots
-
 
     def get_king_best_beating(self, row: int, col: int) -> list[tp.Tuple[tp.Tuple[int, int], list[tp.Tuple[int, int]]]]:
         board_copy = deepcopy(self.board)
-        _, moves = self.recursive_king_beatings(board_copy, row, col, self.board[row][col].color, 0, [[], []])
-        # print(moves)
-        return moves
+        beaten_no, moves = self.recursive_king_beatings(
+            board_copy, row, col, board_copy[row][col].color, 0, [[], []])
+        return beaten_no, moves
 
     def get_king_moves(self, row: int, col: int, color: Color) -> list[tp.Tuple[int, int]]:
         qs = [(-1, -1), (-1, 1), (1, 1), (1, -1)]
@@ -241,13 +197,13 @@ class Board:
 
     def get_piece_best_beating(self, row: int, col: int):
         board_copy = deepcopy(self.board)
-        beaten_no, moves = self.recursive_piece_beatings(board_copy, row, col, board_copy[row][col].color,\
-            0, [[], []])
+        beaten_no, moves = self.recursive_piece_beatings(board_copy, row, col, board_copy[row][col].color,
+                                                         0, [[], []])
         return beaten_no, moves
 
-    def recursive_piece_beatings(self, board_copy: list[list[tp.Union[None, Piece]]], row: int, col: int, \
-        starting_color: Color, depth: int, beatings_map: tp.Tuple[tp.Tuple[int, int], list[tp.Tuple[int, int]]]):
-        
+    def recursive_piece_beatings(self, board_copy: list[list[tp.Union[None, Piece]]], row: int, col: int,
+                                 starting_color: Color, depth: int, beatings_map: tp.Tuple[tp.Tuple[int, int], list[tp.Tuple[int, int]]]):
+
         best_depth = 0
         best_moves = []
         to_beat: dict[tp.Tuple[int, int], list[tp.Tuple[int, int]]] = {}
@@ -269,7 +225,7 @@ class Board:
             else:
                 empty_tile = None
                 beaten_piece_coords = (next_row, next_col)
-                
+
                 if starting_color == Color.White:
                     if next_row + q[0] >= 0 and next_col + q[1] >= 0 and next_col + q[1] < self.BOARD_SIZE:
                         if board_copy[next_row + q[0]][next_col + q[1]] is None:
@@ -278,14 +234,14 @@ class Board:
                     if next_row + q[0] < self.BOARD_SIZE and next_col + q[1] >= 0 and next_col + q[1] < self.BOARD_SIZE:
                         if board_copy[next_row + q[0]][next_col + q[1]] is None:
                             empty_tile = (next_row + q[0], next_col + q[1])
-                
+
                 if empty_tile is None:
                     continue
                 else:
                     if beaten_piece_coords in to_beat.keys():
                         to_beat[beaten_piece_coords].append(empty_tile)
                     else:
-                        to_beat[beaten_piece_coords] = [empty_tile]      
+                        to_beat[beaten_piece_coords] = [empty_tile]
 
         if len(to_beat.keys()) == 0:
             return (depth, beatings_map)
@@ -295,24 +251,24 @@ class Board:
                 for landing_spot in to_beat[key]:
                     new_board = deepcopy(board_copy)
                     new_board[key[0]][key[1]] = None
-                    new_board[landing_spot[0]][landing_spot[1]] = Piece(starting_color)
+                    new_board[landing_spot[0]][landing_spot[1]
+                                               ] = Piece(starting_color)
                     new_board[row][col] = None
                     new_beatings = (landing_spot, deepcopy(beatings_map[1]))
                     new_beatings[1].append(key)
                     print(f"beats: {new_beatings}")
-                    rec_outcome = self.recursive_piece_beatings(new_board, landing_spot[0], landing_spot[1], \
-                        starting_color, depth + 1, new_beatings)
+                    rec_outcome = self.recursive_piece_beatings(new_board, landing_spot[0], landing_spot[1],
+                                                                starting_color, depth + 1, new_beatings)
 
                     if rec_outcome[0] > best_depth:
                         best_depth = rec_outcome[0]
-                        # nwm czy to działa TODO
-                        if rec_outcome[0] == 1:
+                        if isinstance(rec_outcome[1], tuple):
                             best_moves = [rec_outcome[1]]
-                        else:
+                        elif isinstance(rec_outcome[1], list):
                             best_moves = rec_outcome[1]
                     elif rec_outcome[0] == best_depth:
                         best_moves.append(rec_outcome[1])
-        
+
         return best_depth, best_moves
 
     def get_piece_moves(self, row: int, col: int) -> tp.Tuple[list[tp.Tuple[int, int]], bool]:
@@ -320,9 +276,9 @@ class Board:
         is_king = self.board[row][col].is_king
 
         if is_king:
-            beatings = self.get_king_best_beating(row, col)
-            if beatings[0][1] != []:
-                return beatings, True, None
+            beaten_no, beatings = self.get_king_best_beating(row, col)
+            if beatings != [[], []]:
+                return beatings, True, beaten_no
             else:
                 moves = self.get_king_moves(row, col, piece_color)
                 return moves, False, None
@@ -353,7 +309,8 @@ class Board:
             for col in range(self.BOARD_SIZE):
                 if self.board[row][col] is not None and self.board[row][col].color == self.whose_turn:
                     if self.can_piece_move(row, col):
-                        piece_moves, is_beating, beaten_no = self.get_piece_moves(row, col)
+                        piece_moves, is_beating, beaten_no = self.get_piece_moves(
+                            row, col)
                         if is_beating and beaten_no > 0:
                             if beaten_no >= best_beating_no:
                                 if beaten_no > best_beating_no:
@@ -373,7 +330,7 @@ class Board:
     def check_kings(self) -> None:
         for col in range(self.BOARD_SIZE):
             if self.board[self.BOARD_SIZE - 1][col] is not None \
-                and self.board[self.BOARD_SIZE - 1][col].color == Color.Black:
+                    and self.board[self.BOARD_SIZE - 1][col].color == Color.Black:
                 self.board[self.BOARD_SIZE - 1][col].become_king()
             if self.board[0][col] is not None and self.board[0][col].color == Color.White:
                 self.board[0][col].become_king()
@@ -387,7 +344,7 @@ class Board:
             print(f'{chr(piece[1] + 65)}{self.BOARD_SIZE - piece[0]}', end=' ')
 
         print("\nChoose piece to move:")
-        piece_col = input("Column: ") # A-H
+        piece_col = input("Column: ")  # A-H
         piece_row = int(input("Row: "))
 
         if piece_col.lower() < 'a' or piece_col.lower() > 'h' or piece_row < 0 or piece_row > Board.BOARD_SIZE:
@@ -397,31 +354,35 @@ class Board:
         piece_row_num = self.BOARD_SIZE - piece_row
 
         if self.board[piece_row_num][piece_col_num] is None or \
-            self.board[piece_row_num][piece_col_num].color != self.whose_turn:
+                self.board[piece_row_num][piece_col_num].color != self.whose_turn:
             return False
 
         print("Possbile spots: ", end='')
         possible_spots = pieces_to_move[(piece_row_num, piece_col_num)]
-        if isinstance(possible_spots, list): 
+        if isinstance(possible_spots, list):
             for spot in possible_spots:
-                print(f"{chr(spot[1] + 65)}{self.BOARD_SIZE - spot[0]}", end=' ')
+                print(
+                    f"{chr(spot[1] + 65)}{self.BOARD_SIZE - spot[0]}", end=' ')
         else:
             for spot in possible_spots.keys():
-                print(f"{chr(spot[1] + 65)}{self.BOARD_SIZE - spot[0]}", end=' ')
-        
-        dest_col = input("\nColumn: ") # A-H
+                print(
+                    f"{chr(spot[1] + 65)}{self.BOARD_SIZE - spot[0]}", end=' ')
+
+        dest_col = input("\nColumn: ")  # A-H
         dest_row = int(input("Row: "))
 
         if dest_col.lower() < 'a' or dest_col.lower() > 'h' or dest_row < 0 or dest_row > Board.BOARD_SIZE:
             return False
-        
+
         dest_col_num = ord(dest_col) - 65
         dest_row_num = self.BOARD_SIZE - dest_row
 
         if isinstance(possible_spots, list):
-            self.move_piece(piece_row_num, piece_col_num, dest_row_num, dest_col_num)
+            self.move_piece(piece_row_num, piece_col_num,
+                            dest_row_num, dest_col_num)
         else:
-            self.move_piece(piece_row_num, piece_col_num, dest_row_num, dest_col_num)
+            self.move_piece(piece_row_num, piece_col_num,
+                            dest_row_num, dest_col_num)
             for dest in possible_spots[dest_row_num, dest_col_num]:
                 self.destroy_piece(dest[0], dest[1])
 
@@ -432,7 +393,5 @@ class Board:
         else:
             self.whose_turn = Color.White
 
-# TODO: czy działa bicie do tyłu
-# TODO: multibicie
 # TODO: wszystko z damkami
 # TODO: endgame warunki
