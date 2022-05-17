@@ -1,7 +1,7 @@
-from Board import Board
+from Game import Game
 
 if __name__ == "__main__":
-    starting_board = Board()
+    new_game = Game()
     while True:
-        starting_board.print_board()
-        starting_board.player_move()
+        new_game.boardObj.print_board()
+        new_game.player_move()

@@ -125,7 +125,7 @@ class Board:
             next_row = row + q[0]
             next_col = col + q[1]
 
-            while next_row > 0 and next_row < self.BOARD_SIZE and next_col > 0 and next_col < self.BOARD_SIZE:
+            while next_row > 0 and next_row < self.BOARD_SIZE - 1 and next_col > 0 and next_col < self.BOARD_SIZE - 1:
                 next_tile = board_copy[next_row][next_col]
 
                 if next_tile is not None and next_tile.color == starting_color:
@@ -134,7 +134,7 @@ class Board:
                     empty_tiles = []
                     beaten_piece_coords = (next_row, next_col)
 
-                    while next_row > 0 and next_row < self.BOARD_SIZE and next_col > 0 and next_col < self.BOARD_SIZE:
+                    while next_row + q[0] >= 0 and next_row + q[0] < self.BOARD_SIZE and next_col + q[1] >= 0 and next_col + q[1] < self.BOARD_SIZE:
                         next_row += q[0]
                         next_col += q[1]
                         next_tile = board_copy[next_row][next_col]
@@ -147,6 +147,7 @@ class Board:
                         break
                     else:
                         to_beat[beaten_piece_coords] = empty_tiles
+                        break
                 else:
                     next_row += q[0]
                     next_col += q[1]
@@ -158,14 +159,20 @@ class Board:
                 for landing_spot in to_beat[key]:
                     new_board = deepcopy(board_copy)
                     new_board[key[0]][key[1]] = None
-                    new_beatings = (landing_spot, beatings_map[1])
+                    new_board[landing_spot[0]][landing_spot[1]
+                            ] = Piece(starting_color, True)
+                    new_board[row][col] = None
+                    new_beatings = (landing_spot, deepcopy(beatings_map[1]))
                     new_beatings[1].append(key)
                     rec_outcome = self.recursive_king_beatings(new_board, landing_spot[0], landing_spot[1],
-                                                               starting_color, depth + 1, new_beatings, False)
+                                                               starting_color, depth + 1, new_beatings)
 
                     if rec_outcome[0] > best_depth:
                         best_depth = rec_outcome[0]
-                        best_moves = [rec_outcome[1]]
+                        if isinstance(rec_outcome[1], tuple):
+                            best_moves = [rec_outcome[1]]
+                        elif isinstance(rec_outcome[1], list):
+                            best_moves = rec_outcome[1]
                     elif rec_outcome[0] == best_depth:
                         best_moves.append(rec_outcome[1])
 
@@ -226,14 +233,14 @@ class Board:
                 empty_tile = None
                 beaten_piece_coords = (next_row, next_col)
 
-                if starting_color == Color.White:
-                    if next_row + q[0] >= 0 and next_col + q[1] >= 0 and next_col + q[1] < self.BOARD_SIZE:
-                        if board_copy[next_row + q[0]][next_col + q[1]] is None:
-                            empty_tile = (next_row + q[0], next_col + q[1])
-                else:
-                    if next_row + q[0] < self.BOARD_SIZE and next_col + q[1] >= 0 and next_col + q[1] < self.BOARD_SIZE:
-                        if board_copy[next_row + q[0]][next_col + q[1]] is None:
-                            empty_tile = (next_row + q[0], next_col + q[1])
+                # if starting_color == Color.White:
+                if next_row + q[0] >= 0 and next_row + q[0] < self.BOARD_SIZE and next_col + q[1] >= 0 and next_col + q[1] < self.BOARD_SIZE:
+                    if board_copy[next_row + q[0]][next_col + q[1]] is None:
+                        empty_tile = (next_row + q[0], next_col + q[1])
+                # else:
+                #     if next_row + q[0] < self.BOARD_SIZE and next_col + q[1] >= 0 and next_col + q[1] < self.BOARD_SIZE:
+                #         if board_copy[next_row + q[0]][next_col + q[1]] is None:
+                #             empty_tile = (next_row + q[0], next_col + q[1])
 
                 if empty_tile is None:
                     continue
@@ -334,64 +341,3 @@ class Board:
                 self.board[self.BOARD_SIZE - 1][col].become_king()
             if self.board[0][col] is not None and self.board[0][col].color == Color.White:
                 self.board[0][col].become_king()
-
-    def player_move(self) -> bool:
-        pieces_to_move = self.possible_pieces_to_move()
-        print(pieces_to_move)
-        print("Pieces to move: ", end='')
-
-        for piece in pieces_to_move.keys():
-            print(f'{chr(piece[1] + 65)}{self.BOARD_SIZE - piece[0]}', end=' ')
-
-        print("\nChoose piece to move:")
-        piece_col = input("Column: ")  # A-H
-        piece_row = int(input("Row: "))
-
-        if piece_col.lower() < 'a' or piece_col.lower() > 'h' or piece_row < 0 or piece_row > Board.BOARD_SIZE:
-            return False
-
-        piece_col_num = ord(piece_col) - 65
-        piece_row_num = self.BOARD_SIZE - piece_row
-
-        if self.board[piece_row_num][piece_col_num] is None or \
-                self.board[piece_row_num][piece_col_num].color != self.whose_turn:
-            return False
-
-        print("Possbile spots: ", end='')
-        possible_spots = pieces_to_move[(piece_row_num, piece_col_num)]
-        if isinstance(possible_spots, list):
-            for spot in possible_spots:
-                print(
-                    f"{chr(spot[1] + 65)}{self.BOARD_SIZE - spot[0]}", end=' ')
-        else:
-            for spot in possible_spots.keys():
-                print(
-                    f"{chr(spot[1] + 65)}{self.BOARD_SIZE - spot[0]}", end=' ')
-
-        dest_col = input("\nColumn: ")  # A-H
-        dest_row = int(input("Row: "))
-
-        if dest_col.lower() < 'a' or dest_col.lower() > 'h' or dest_row < 0 or dest_row > Board.BOARD_SIZE:
-            return False
-
-        dest_col_num = ord(dest_col) - 65
-        dest_row_num = self.BOARD_SIZE - dest_row
-
-        if isinstance(possible_spots, list):
-            self.move_piece(piece_row_num, piece_col_num,
-                            dest_row_num, dest_col_num)
-        else:
-            self.move_piece(piece_row_num, piece_col_num,
-                            dest_row_num, dest_col_num)
-            for dest in possible_spots[dest_row_num, dest_col_num]:
-                self.destroy_piece(dest[0], dest[1])
-
-        self.check_kings()
-
-        if self.whose_turn == Color.White:
-            self.whose_turn = Color.Black
-        else:
-            self.whose_turn = Color.White
-
-# TODO: wszystko z damkami
-# TODO: endgame warunki
