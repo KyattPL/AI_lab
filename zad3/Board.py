@@ -2,7 +2,10 @@ from copy import deepcopy
 import os
 import typing as tp
 
+from numpy import isin
+
 from Color import Color
+from GameResult import GameResult
 from Piece import Piece
 
 
@@ -13,6 +16,8 @@ class Board:
     def __init__(self) -> None:
         self.board: list[list[tp.Union[None, Piece]]] = []
         self.whose_turn = Color.White
+        self.kings_only = False
+        self.turns_with_kings_only = 0
 
         for _ in range(Board.BOARD_SIZE):
             temp = []
@@ -48,7 +53,7 @@ class Board:
         for row in self.board:
             for cell in row:
                 if cell == None:
-                    print('#', end=' ')
+                    print('.', end=' ')
                 elif cell.color == Color.White and not cell.is_king:
                     print('W', end=' ')
                 elif cell.color == Color.Black and not cell.is_king:
@@ -174,7 +179,11 @@ class Board:
                         elif isinstance(rec_outcome[1], list):
                             best_moves = rec_outcome[1]
                     elif rec_outcome[0] == best_depth:
-                        best_moves.append(rec_outcome[1])
+                        if isinstance(rec_outcome[1], list):
+                            for outc in rec_outcome[1]:
+                                best_moves.append(outc)
+                        else:
+                            best_moves.append(rec_outcome[1])
 
         return best_depth, best_moves
 
@@ -248,7 +257,6 @@ class Board:
         if len(to_beat.keys()) == 0:
             return (depth, beatings_map)
         else:
-            print(to_beat)
             for key in to_beat.keys():
                 for landing_spot in to_beat[key]:
                     new_board = deepcopy(board_copy)
@@ -258,7 +266,6 @@ class Board:
                     new_board[row][col] = None
                     new_beatings = (landing_spot, deepcopy(beatings_map[1]))
                     new_beatings[1].append(key)
-                    print(f"beats: {new_beatings}")
                     rec_outcome = self.recursive_piece_beatings(new_board, landing_spot[0], landing_spot[1],
                                                                 starting_color, depth + 1, new_beatings)
 
@@ -269,7 +276,11 @@ class Board:
                         elif isinstance(rec_outcome[1], list):
                             best_moves = rec_outcome[1]
                     elif rec_outcome[0] == best_depth:
-                        best_moves.append(rec_outcome[1])
+                        if isinstance(rec_outcome[1], list):
+                            for outc in rec_outcome[1]:
+                                best_moves.append(outc)
+                        else:
+                            best_moves.append(rec_outcome[1])
 
         return best_depth, best_moves
 
@@ -286,7 +297,6 @@ class Board:
                 return moves, False, None
         else:
             beaten_no, beatings = self.get_piece_best_beating(row, col)
-            print(beaten_no, beatings)
             if beatings != [[], []]:
                 return beatings, True, beaten_no
             else:
@@ -336,3 +346,98 @@ class Board:
                 self.board[self.BOARD_SIZE - 1][col].become_king()
             if self.board[0][col] is not None and self.board[0][col].color == Color.White:
                 self.board[0][col].become_king()
+
+    def are_kings_only(self) -> bool:
+        white_pieces = 0
+        black_pieces = 0
+        for row in range(Board.BOARD_SIZE):
+            for col in range(Board.BOARD_SIZE):
+                if self.board[row][col] is not None:
+                    if self.board[row][col].color == Color.Black \
+                        and not self.board[row][col].is_king:
+                            black_pieces += 1
+                    
+                    if self.board[row][col].color == Color.White \
+                        and not self.board[row][col].is_king:
+                            white_pieces += 1
+        
+        if white_pieces == 0 or black_pieces == 0:
+            return True
+        else:
+            return False
+
+    def are_pieces_left(self) -> bool:
+        white_pieces = 0
+        black_pieces = 0
+        for row in range(Board.BOARD_SIZE):
+            for col in range(Board.BOARD_SIZE):
+                if self.board[row][col] is not None:
+                    if self.board[row][col].color == Color.Black:
+                            black_pieces += 1
+                    
+                    if self.board[row][col].color == Color.White:
+                            white_pieces += 1
+        
+        if white_pieces == 0 or black_pieces == 0:
+            return False
+        else:
+            return True
+
+    def check_end(self) -> tp.Union[GameResult, None]:
+        if not self.are_pieces_left():
+            if self.whose_turn == Color.White:
+                return GameResult.WHITE_WIN
+            else:
+                return GameResult.BLACK_WIN
+
+        if self.kings_only:
+            self.turns_with_kings_only += 1
+
+        self.check_kings()
+
+        if self.are_kings_only():
+            self.kings_only = True
+
+        if self.turns_with_kings_only == 15:
+            return GameResult.TIE
+        
+        return None
+
+    def next_boards(self):
+        pieces_to_move = self.possible_pieces_to_move()
+        boards = []
+
+        for piece in pieces_to_move.keys():
+            possible_spots = pieces_to_move[piece]
+            
+            if isinstance(possible_spots, list):
+                for spot in possible_spots:
+                    new_board = deepcopy(self)
+                    new_board.move_piece(piece[0], piece[1], spot[0], spot[1])
+                    if new_board.whose_turn == Color.White:
+                        new_board.whose_turn = Color.Black
+                    else:
+                        new_board.whose_turn = Color.White
+                    Board.update_kings_next_boards(new_board)
+                    boards.append(new_board)
+            else:
+                for spot in possible_spots.keys():
+                    new_board = deepcopy(self)
+                    new_board.move_piece(piece[0], piece[1], spot[0], spot[1])
+                    for dest in possible_spots[spot[0], spot[1]]:
+                        new_board.destroy_piece(dest[0], dest[1])
+                    if new_board.whose_turn == Color.White:
+                        new_board.whose_turn = Color.Black
+                    else:
+                        new_board.whose_turn = Color.White
+                    Board.update_kings_next_boards(new_board)
+                    boards.append(new_board)
+        
+        return boards
+
+    @staticmethod
+    def update_kings_next_boards(board) -> None:
+        if board.kings_only:
+            board.turns_with_kings_only += 1
+
+        board.check_kings()

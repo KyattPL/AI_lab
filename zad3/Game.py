@@ -1,4 +1,6 @@
 from copy import deepcopy
+import typing as tp
+
 from Board import Board
 from BoardEval import BoardEval
 from GameResult import GameResult
@@ -12,44 +14,6 @@ class Game:
 
     def __init__(self) -> None:
         self.boardObj = Board()
-        self.kings_only = False
-        self.turns_with_kings_only = 0
-
-    def are_kings_only(self) -> bool:
-        white_pieces = 0
-        black_pieces = 0
-        for row in range(self.boardObj.BOARD_SIZE):
-            for col in range(self.boardObj.BOARD_SIZE):
-                if self.boardObj.board[row][col] is not None:
-                    if self.boardObj.board[row][col].color == Color.Black \
-                        and not self.boardObj.board[row][col].is_king:
-                            black_pieces += 1
-                    
-                    if self.boardObj.board[row][col].color == Color.White \
-                        and not self.boardObj.board[row][col].is_king:
-                            white_pieces += 1
-        
-        if white_pieces == 0 or black_pieces == 0:
-            return True
-        else:
-            return False
-
-    def are_pieces_left(self) -> bool:
-        white_pieces = 0
-        black_pieces = 0
-        for row in range(self.boardObj.BOARD_SIZE):
-            for col in range(self.boardObj.BOARD_SIZE):
-                if self.boardObj.board[row][col] is not None:
-                    if self.boardObj.board[row][col].color == Color.Black:
-                            black_pieces += 1
-                    
-                    if self.boardObj.board[row][col].color == Color.White:
-                            white_pieces += 1
-        
-        if white_pieces == 0 or black_pieces == 0:
-            return False
-        else:
-            return True
 
     def player_move(self) -> GameResult:
         pieces_to_move = self.boardObj.possible_pieces_to_move()
@@ -109,29 +73,34 @@ class Game:
             for dest in possible_spots[dest_row_num, dest_col_num]:
                 self.boardObj.destroy_piece(dest[0], dest[1])
 
-        if not self.are_pieces_left():
-            if self.boardObj.whose_turn == Color.White:
-                return GameResult.WHITE_WIN
-            else:
-                return GameResult.BLACK_WIN
+        # if not self.are_pieces_left():
+        #     if self.boardObj.whose_turn == Color.White:
+        #         return GameResult.WHITE_WIN
+        #     else:
+        #         return GameResult.BLACK_WIN
 
-        if self.kings_only:
-            self.turns_with_kings_only += 1
+        # if self.kings_only:
+        #     self.turns_with_kings_only += 1
 
-        self.boardObj.check_kings()
+        # self.boardObj.check_kings()
 
-        if self.are_kings_only():
-            self.kings_only = True
+        # if self.are_kings_only():
+        #     self.kings_only = True
 
-        if self.turns_with_kings_only == 15:
-            return GameResult.TIE
+        # if self.turns_with_kings_only == 15:
+        #     return GameResult.TIE
+
+        res = self.boardObj.check_end()
+
+        if res is not None:
+            return res
 
         if self.boardObj.whose_turn == Color.White:
             self.boardObj.whose_turn = Color.Black
         else:
             self.boardObj.whose_turn = Color.White
 
-    def ai_move(self, board_eval) -> GameResult:
+    def ai_move(self, ai_alg, board_eval, depth=3) -> tp.Union[GameResult, None]:
         pieces_to_move = self.boardObj.possible_pieces_to_move()
 
         if pieces_to_move == {}:
@@ -140,27 +109,16 @@ class Game:
             else:
                 return GameResult.BLACK_WIN
 
-        # to całe niżej useless
-        # trzeba zrobić tak, że przekazuje boarda
-        # do minmax() albo alfabeta()
-        # i on w środku dla planszy generuje sobie
-        # magicznie listę dzieci
-        
-        new_board = self.boardObj.board
-        BoardEval.min_max(new_board, 3, True, BoardEval.board_value_1)
-        BoardEval.alfa_beta(new_board, 3, float("-inf"), float("inf"), True, BoardEval.board_value_1)
+        res = self.boardObj.check_end()
 
-        # for piece in pieces_to_move.keys():
-        #     possible_spots = pieces_to_move[piece]
-        #     new_board = deepcopy(self.boardObj.board)
-            
-        #     if isinstance(possible_spots, list):
-        #         for spot in possible_spots:
-        #             new_board.move_piece(piece[0], piece[1], spot[0], spot[1])
-        #             # eval here
-        #     else:
-        #         for spot in possible_spots.keys():
-        #             new_board.move_piece(piece[0], piece[1], spot[0], spot[1])
-        #             for dest in possible_spots[spot[0], spot[1]]:
-        #                 new_board.destroy_piece(dest[0], dest[1])
-        #             # eval here
+        if res is not None:
+            return res
+        
+        new_board = deepcopy(self.boardObj)
+        if ai_alg == "minmax":
+            _, new_pos = BoardEval.min_max(new_board, depth, True, board_eval)
+        else:
+            _, new_pos = BoardEval.alpha_beta(new_board, depth, float("-inf"), float("inf"), True, board_eval)
+        self.boardObj = new_pos
+
+        return None
