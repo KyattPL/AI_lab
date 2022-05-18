@@ -233,14 +233,9 @@ class Board:
                 empty_tile = None
                 beaten_piece_coords = (next_row, next_col)
 
-                # if starting_color == Color.White:
                 if next_row + q[0] >= 0 and next_row + q[0] < self.BOARD_SIZE and next_col + q[1] >= 0 and next_col + q[1] < self.BOARD_SIZE:
                     if board_copy[next_row + q[0]][next_col + q[1]] is None:
                         empty_tile = (next_row + q[0], next_col + q[1])
-                # else:
-                #     if next_row + q[0] < self.BOARD_SIZE and next_col + q[1] >= 0 and next_col + q[1] < self.BOARD_SIZE:
-                #         if board_copy[next_row + q[0]][next_col + q[1]] is None:
-                #             empty_tile = (next_row + q[0], next_col + q[1])
 
                 if empty_tile is None:
                     continue
