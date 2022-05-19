@@ -6,9 +6,8 @@ from BoardEval import BoardEval
 from GameResult import GameResult
 from Color import Color
 
-# TODO: min-max i alfa-beta
-# TODO: zrobić 3 kontrolery: PvP, PvAI, AIvAI
 # TODO: 4 osobne funkcje oceniające stan planszy
+
 
 class Game:
 
@@ -28,7 +27,8 @@ class Game:
         print("Pieces to move: ", end='')
 
         for piece in pieces_to_move.keys():
-            print(f'{chr(piece[1] + 65)}{Board.BOARD_SIZE - piece[0]}', end=' ')
+            print(
+                f'{chr(piece[1] + 65)}{Board.BOARD_SIZE - piece[0]}', end=' ')
 
         print("\nChoose piece to move:")
         piece_col = input("Column: ")  # A-H
@@ -66,10 +66,10 @@ class Game:
 
         if isinstance(possible_spots, list):
             self.boardObj.move_piece(piece_row_num, piece_col_num,
-                            dest_row_num, dest_col_num)
+                                     dest_row_num, dest_col_num)
         else:
             self.boardObj.move_piece(piece_row_num, piece_col_num,
-                            dest_row_num, dest_col_num)
+                                     dest_row_num, dest_col_num)
             for dest in possible_spots[dest_row_num, dest_col_num]:
                 self.boardObj.destroy_piece(dest[0], dest[1])
 
@@ -113,12 +113,13 @@ class Game:
 
         if res is not None:
             return res
-        
+
         new_board = deepcopy(self.boardObj)
         if ai_alg == "minmax":
             _, new_pos = BoardEval.min_max(new_board, depth, True, board_eval)
         else:
-            _, new_pos = BoardEval.alpha_beta(new_board, depth, float("-inf"), float("inf"), True, board_eval)
+            _, new_pos = BoardEval.alpha_beta(
+                new_board, depth, float("-inf"), float("inf"), True, board_eval)
         self.boardObj = new_pos
 
         return None

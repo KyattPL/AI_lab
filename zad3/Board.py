@@ -2,8 +2,6 @@ from copy import deepcopy
 import os
 import typing as tp
 
-from numpy import isin
-
 from Color import Color
 from GameResult import GameResult
 from Piece import Piece
@@ -165,7 +163,7 @@ class Board:
                     new_board = deepcopy(board_copy)
                     new_board[key[0]][key[1]] = None
                     new_board[landing_spot[0]][landing_spot[1]
-                            ] = Piece(starting_color, True)
+                                               ] = Piece(starting_color, True)
                     new_board[row][col] = None
                     new_beatings = (landing_spot, deepcopy(beatings_map[1]))
                     new_beatings[1].append(key)
@@ -354,13 +352,13 @@ class Board:
             for col in range(Board.BOARD_SIZE):
                 if self.board[row][col] is not None:
                     if self.board[row][col].color == Color.Black \
-                        and not self.board[row][col].is_king:
-                            black_pieces += 1
-                    
+                            and not self.board[row][col].is_king:
+                        black_pieces += 1
+
                     if self.board[row][col].color == Color.White \
-                        and not self.board[row][col].is_king:
-                            white_pieces += 1
-        
+                            and not self.board[row][col].is_king:
+                        white_pieces += 1
+
         if white_pieces == 0 or black_pieces == 0:
             return True
         else:
@@ -373,11 +371,11 @@ class Board:
             for col in range(Board.BOARD_SIZE):
                 if self.board[row][col] is not None:
                     if self.board[row][col].color == Color.Black:
-                            black_pieces += 1
-                    
+                        black_pieces += 1
+
                     if self.board[row][col].color == Color.White:
-                            white_pieces += 1
-        
+                        white_pieces += 1
+
         if white_pieces == 0 or black_pieces == 0:
             return False
         else:
@@ -400,7 +398,7 @@ class Board:
 
         if self.turns_with_kings_only == 15:
             return GameResult.TIE
-        
+
         return None
 
     def next_boards(self):
@@ -409,7 +407,7 @@ class Board:
 
         for piece in pieces_to_move.keys():
             possible_spots = pieces_to_move[piece]
-            
+
             if isinstance(possible_spots, list):
                 for spot in possible_spots:
                     new_board = deepcopy(self)
@@ -432,7 +430,7 @@ class Board:
                         new_board.whose_turn = Color.White
                     Board.update_kings_next_boards(new_board)
                     boards.append(new_board)
-        
+
         return boards
 
     @staticmethod
