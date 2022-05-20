@@ -6,8 +6,6 @@ from BoardEval import BoardEval
 from GameResult import GameResult
 from Color import Color
 
-# TODO: 4 osobne funkcje oceniające stan planszy
-
 
 class Game:
 
@@ -72,23 +70,6 @@ class Game:
                                      dest_row_num, dest_col_num)
             for dest in possible_spots[dest_row_num, dest_col_num]:
                 self.boardObj.destroy_piece(dest[0], dest[1])
-
-        # if not self.are_pieces_left():
-        #     if self.boardObj.whose_turn == Color.White:
-        #         return GameResult.WHITE_WIN
-        #     else:
-        #         return GameResult.BLACK_WIN
-
-        # if self.kings_only:
-        #     self.turns_with_kings_only += 1
-
-        # self.boardObj.check_kings()
-
-        # if self.are_kings_only():
-        #     self.kings_only = True
-
-        # if self.turns_with_kings_only == 15:
-        #     return GameResult.TIE
 
         res = self.boardObj.check_end()
 

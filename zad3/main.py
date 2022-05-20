@@ -2,6 +2,9 @@ from BoardEval import BoardEval
 from Game import Game
 from GameResult import GameResult
 
+# TODO: losowy start
+# TODO: ai z jedną heurystyką vs ai z inną heurystyką
+
 
 def ai_vs_ai(eval_func) -> GameResult:
     new_game = Game()

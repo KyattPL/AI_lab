@@ -1,0 +1,14 @@
+- podziałka min-max VS alpha-beta:
+	- każda heurystyka vs każda (osobna tabelka):
+		- dla każdej głębokości między (2-5):
+			- głębokość
+			średnia z 10 uruchomień:
+			- liczby tur
+			- czasu gry
+			- wyniku gry (W/D/B gdzie W - wygrane białych itd.)
+
+- oprócz tego można stronę porównującą min-maxa i alpha-beta:
+	(chyba niezależnie od heurystyki ale nwm)	
+	- dla każdej głębokości:
+		- średnia liczba tur
+		- średni czas gry

@@ -3,9 +3,8 @@ import typing as tp
 from Board import Board
 from Color import Color
 
-class BoardEval:
 
-    counter = 0
+class BoardEval:
 
     @staticmethod
     def board_value_1(board: Board) -> int:
@@ -15,11 +14,11 @@ class BoardEval:
             for col in range(Board.BOARD_SIZE):
                 if board.board[row][col] is not None:
                     if board.board[row][col].color == Color.Black:
-                            black_pieces += 1
-                    
+                        black_pieces += 1
+
                     if board.board[row][col].color == Color.White:
-                            white_pieces += 1
-        
+                        white_pieces += 1
+
         return white_pieces - black_pieces
 
     @staticmethod
@@ -36,15 +35,9 @@ class BoardEval:
 
     @staticmethod
     def min_max(position: Board, depth: int, is_max: bool, eval_func) -> tp.Tuple[int, Board]:
-        
+
         if depth == 0 or position.check_end() is not None:
-           return eval_func(position), position
-        
-        if depth == 1:
-            BoardEval.counter += 1
-        
-        if BoardEval.counter == 26614:
-            print(BoardEval.counter)
+            return eval_func(position), position
 
         if is_max:
             maxEval = float("-inf")
@@ -68,13 +61,14 @@ class BoardEval:
     @staticmethod
     def alpha_beta(position: Board, depth: int, alpha: int, beta: int, is_max: bool, eval_func) -> tp.Tuple[int, Board]:
         if depth == 0 or position.check_end() is not None:
-           return eval_func(position), position
-        
+            return eval_func(position), position
+
         if is_max:
             maxEval = float("-inf")
             best_board = position
             for child in position.next_boards():
-                eval = BoardEval.alpha_beta(child, depth - 1, alpha, beta, False, eval_func)
+                eval = BoardEval.alpha_beta(
+                    child, depth - 1, alpha, beta, False, eval_func)
                 if eval[0] > maxEval:
                     maxEval = eval[0]
                     best_board = child
@@ -86,7 +80,8 @@ class BoardEval:
             minEval = float("inf")
             best_board = position
             for child in position.next_boards():
-                eval = BoardEval.alpha_beta(child, depth - 1, alpha, beta, True, eval_func)
+                eval = BoardEval.alpha_beta(
+                    child, depth - 1, alpha, beta, True, eval_func)
                 if eval[0] < minEval:
                     minEval = eval[0]
                     best_board = child
