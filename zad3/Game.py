@@ -1,4 +1,5 @@
 from copy import deepcopy
+from random import randint
 import typing as tp
 
 from Board import Board
@@ -104,3 +105,16 @@ class Game:
         self.boardObj = new_pos
 
         return None
+
+    def random_start(self) -> None:
+        pieces_to_move = self.boardObj.possible_pieces_to_move()
+        pieces_to_choose = list(pieces_to_move.keys())
+        rand_index = randint(0, len(pieces_to_choose) - 1)
+        chosen_piece = pieces_to_choose[rand_index]
+        
+        landing_spots = pieces_to_move[chosen_piece]
+        rand_spot_index = randint(0, len(landing_spots) - 1)
+        landing_spot = landing_spots[rand_spot_index]
+
+        self.boardObj.move_piece(chosen_piece[0], chosen_piece[1], landing_spot[0], landing_spot[1])
+        self.boardObj.whose_turn = Color.Black

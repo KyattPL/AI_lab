@@ -19,19 +19,93 @@ class BoardEval:
                     if board.board[row][col].color == Color.White:
                         white_pieces += 1
 
-        return white_pieces - black_pieces
+        if board.whose_turn == Color.Black:
+            return black_pieces - white_pieces
+        else:
+            return white_pieces - black_pieces
 
     @staticmethod
     def board_value_2(board: Board) -> int:
-        pass
+        white_score = 0
+        black_score = 0
+        for row in range(Board.BOARD_SIZE):
+            for col in range(Board.BOARD_SIZE):
+                if board.board[row][col] is not None:
+                    if row == 0 or row == Board.BOARD_SIZE - 1 or \
+                        col == 0 or col == Board.BOARD_SIZE - 1:
+                            if board.board[row][col].color == Color.White:
+                                white_score += 1
+                            else:
+                                black_score += 1
+                    elif row == 1 or row == Board.BOARD_SIZE - 2 or \
+                        col == 1 or col == Board.BOARD_SIZE - 2:
+                            if board.board[row][col].color == Color.White:
+                                white_score += 2
+                            else:
+                                black_score += 2
+                    else:
+                        if board.board[row][col].color == Color.White:
+                            white_score += 3
+                        else:
+                            black_score += 3
+        
+        if board.whose_turn == Color.Black:
+            return black_score - white_score
+        else:
+            return white_score - black_score
 
     @staticmethod
     def board_value_3(board: Board) -> int:
-        pass
+        white_score = 0
+        black_score = 0
+        for row in range(Board.BOARD_SIZE):
+            for col in range(Board.BOARD_SIZE):
+                if board.board[row][col] is not None:
+                    if row == 0 or row == Board.BOARD_SIZE - 1 or \
+                        col == 0 or col == Board.BOARD_SIZE - 1:
+                            if board.board[row][col].color == Color.White:
+                                white_score += 3
+                            else:
+                                black_score += 3
+                    elif row == 1 or row == Board.BOARD_SIZE - 2 or \
+                        col == 1 or col == Board.BOARD_SIZE - 2:
+                            if board.board[row][col].color == Color.White:
+                                white_score += 2
+                            else:
+                                black_score += 2
+                    else:
+                        if board.board[row][col].color == Color.White:
+                            white_score += 1
+                        else:
+                            black_score += 1
+        
+        if board.whose_turn == Color.Black:
+            return black_score - white_score
+        else:
+            return white_score - black_score
 
     @staticmethod
     def board_value_4(board: Board) -> int:
-        pass
+        white_score = 0
+        black_score = 0
+        for row in range(Board.BOARD_SIZE):
+            for col in range(Board.BOARD_SIZE):
+                if board.board[row][col] is not None:
+                    if board.board[row][col].color == Color.Black:
+                        if board.board[row][col].is_king:
+                            black_score += 5
+                        else:
+                            black_score += 1
+                    if board.board[row][col].color == Color.White:
+                        if board.board[row][col].is_king:
+                            white_score += 5
+                        else:
+                            white_score += 1
+
+        if board.whose_turn == Color.Black:
+            return black_score - white_score
+        else:
+            return white_score - black_score
 
     @staticmethod
     def min_max(position: Board, depth: int, is_max: bool, eval_func) -> tp.Tuple[int, Board]:

@@ -396,7 +396,7 @@ class Board:
         if self.are_kings_only():
             self.kings_only = True
 
-        if self.turns_with_kings_only == 15:
+        if self.turns_with_kings_only >= 15:
             return GameResult.TIE
 
         return None
