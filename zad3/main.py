@@ -9,6 +9,7 @@ white_wins = 0
 black_wins = 0
 ties = 0
 
+
 def ai_vs_ai(algo, eval_func_white, eval_func_black, dep, randomStart=True) -> GameResult:
     global avg_time
     global avg_turns
@@ -22,7 +23,7 @@ def ai_vs_ai(algo, eval_func_white, eval_func_black, dep, randomStart=True) -> G
     eval_func = eval_func_white
 
     turns = 0
-    start_time = process_time() 
+    start_time = process_time()
 
     if randomStart:
         new_game.random_start()
@@ -36,21 +37,21 @@ def ai_vs_ai(algo, eval_func_white, eval_func_black, dep, randomStart=True) -> G
         turns += 1
         if state is not None:
             is_done = True
-        
+
         if white_turn:
             white_turn = False
             eval_func = eval_func_black
         else:
             white_turn = True
             eval_func = eval_func_white
-    
+
     if state == GameResult.WHITE_WIN:
         white_wins += 1
     elif state == GameResult.BLACK_WIN:
         black_wins += 1
     else:
         ties += 1
-    
+
     avg_time += process_time() - start_time
     avg_turns += turns
 
@@ -61,10 +62,11 @@ def ai_vs_ai(algo, eval_func_white, eval_func_black, dep, randomStart=True) -> G
 
 
 if __name__ == "__main__":
-    depth = 3
+    depth = 2
 
     for i in range(10):
-        ai_vs_ai("alfa", BoardEval.board_value_2, BoardEval.board_value_2, depth)
+        ai_vs_ai("alfa", BoardEval.board_value_1,
+                 BoardEval.board_value_1, depth)
 
     print(f"Avg turns: {avg_turns / 10}")
     print(f"Avg time: {avg_time / 10}")

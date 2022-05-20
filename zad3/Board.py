@@ -16,6 +16,7 @@ class Board:
         self.whose_turn = Color.White
         self.kings_only = False
         self.turns_with_kings_only = 0
+        self.turns_in_general = 0
 
         for _ in range(Board.BOARD_SIZE):
             temp = []
@@ -387,6 +388,11 @@ class Board:
                 return GameResult.WHITE_WIN
             else:
                 return GameResult.BLACK_WIN
+
+        self.turns_in_general += 1
+
+        if self.turns_in_general >= 300:
+            return GameResult.TIE
 
         if self.kings_only:
             self.turns_with_kings_only += 1
