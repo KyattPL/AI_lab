@@ -62,11 +62,11 @@ def ai_vs_ai(algo, eval_func_white, eval_func_black, dep, randomStart=True) -> G
 
 
 if __name__ == "__main__":
-    depth = 2
+    depth = 5
 
     for i in range(10):
-        ai_vs_ai("alfa", BoardEval.board_value_1,
-                 BoardEval.board_value_1, depth)
+        ai_vs_ai("alpha", BoardEval.board_value_4,
+                 BoardEval.board_value_4, depth)
 
     print(f"Avg turns: {avg_turns / 10}")
     print(f"Avg time: {avg_time / 10}")
